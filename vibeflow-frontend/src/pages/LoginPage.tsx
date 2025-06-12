@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, isAuthenticated } = useAuth(); // Added isAuthenticated for potential local error display
+  const { login } = useAuth(); // Removed unused isAuthenticated
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

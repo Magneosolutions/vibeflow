@@ -1,6 +1,6 @@
 import React from 'react';
-import type { ReactNode } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// import type { ReactNode } from 'react'; // Removed unused import
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom'; // Added useNavigate
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
@@ -21,26 +21,45 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   return <>{children}</>; // Ensure children is treated as ReactNode
 };
 
-// 4. App component wrapped with AuthProvider
+// New AppContent component to use hooks and pass props to Layout
+const AppContent: React.FC = () => {
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    logout(); // Call logout from context
+    navigate('/login'); // Navigate to login after logout
+  };
+
+  return (
+    <Layout
+      isAuthenticated={isAuthenticated}
+      onSignOut={handleSignOut}
+      onNavigate={navigate}
+    >
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <MainAppPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<NavigateToCorrectRoute />} />
+      </Routes>
+    </Layout>
+  );
+};
+
+// App component wrapped with AuthProvider
 const App: React.FC = () => {
   return (
     <AuthProvider>
       <Router>
-        <Layout>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <MainAppPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="*" element={<NavigateToCorrectRoute />} />
-          </Routes>
-        </Layout>
+        <AppContent />
       </Router>
     </AuthProvider>
   );

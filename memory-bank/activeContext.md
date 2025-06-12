@@ -1,34 +1,26 @@
 # Active Context: VibeFlow
 
 ## Current Work Focus
-*   **UI Styling & Refinement:** Applied Tailwind CSS to `LoginPage.tsx` and `SignUpPage.tsx` to align with a reference design, focusing on a minimalistic aesthetic, larger form containers, and more rounded corners.
-*   **Frontend Setup:**
-    *   Switched from `create-react-app` to Vite for the `vibeflow-frontend` project.
-    *   Installed `react-router-dom` for navigation.
-    *   Set up basic project structure with `pages`, `components`, and `contexts` directories.
-    *   Implemented a simulated authentication flow using React Context (`AuthContext.tsx`).
-    *   Created placeholder components for `LoginPage`, `SignUpPage`, `MainAppPage`, and a `Layout` component.
-    *   Configured Tailwind CSS for the project.
+*   **UI Styling Complete:** Core UI components (`LoginPage.tsx`, `SignUpPage.tsx`, `Layout.tsx`, `MainAppPage.tsx`) have been styled using Tailwind CSS. Brand colors in `tailwind.config.js` confirmed.
+*   **Frontend Foundation:** Vite + React + TypeScript project (`vibeflow-frontend`) is set up with basic routing, simulated authentication (`AuthContext.tsx`), and Tailwind CSS.
+*   **Version Control:** Initial project files pushed to GitHub, ignoring the `Google/` directory.
 
 ## Recent Changes
-*   Updated `productContext.md`, `systemPatterns.md`, `techContext.md`, `.clinerules`, `activeContext.md`, and `progress.md` to reflect UI/auth focus and technology choices (React, GCIP).
-*   Created `vibeflow-frontend` project using Vite.
-*   Installed and configured Tailwind CSS.
-*   Implemented basic routing and simulated authentication.
-*   Styled `LoginPage.tsx` and `SignUpPage.tsx` with Tailwind CSS, increasing container size and corner rounding.
+*   Styled `Layout.tsx` with Tailwind CSS, including header, navigation, and footer.
+*   Styled `MainAppPage.tsx` with Tailwind CSS, focusing on the main input area.
+*   Confirmed current brand colors (`brand-primary`: Indigo, `brand-secondary`: Pink) in `tailwind.config.js` are acceptable.
+*   Created `.gitignore` at the project root to exclude `Google/` and other specified files/folders.
+*   Initialized Git repository and pushed all project files (excluding ignored ones) to `git@github.com:mgesteban/vibeflow.git`.
+*   Previously: Updated memory bank files, created Vite project, configured Tailwind, implemented simulated auth, styled login/signup pages.
 
 ## Next Steps
-1.  **Finalize Memory Bank Updates for UI/Auth:**
-    *   Update `progress.md` (next step).
-    *   `.clinerules` already updated with React & GCIP choices.
-2.  **Continue UI Styling & Refinement:**
-    *   Style the `Layout.tsx` component (header/navigation).
-    *   Style the `MainAppPage.tsx`.
-    *   Refine colors and any other specific Tailwind customizations in `tailwind.config.js` if needed.
-3.  **Authentication Implementation (Real):**
+1.  **Finalize Memory Bank Updates:**
+    *   Update `progress.md` to reflect completion of UI styling and set next steps.
+    *   `.clinerules` already reflects React & GCIP choices.
+2.  **Authentication Implementation (Real):**
     *   Begin planning and implementing actual authentication with Google Cloud Identity Platform, replacing the simulated flow.
-    *   This involves backend setup (if any needed beyond GCIP) and frontend integration.
-4.  **Begin Phase 1 (MVP) Core VibeFlow Functionality (after initial UI/auth shell is stable):**
+    *   This involves frontend integration with GCIP SDK and potentially backend adjustments if required by GCIP.
+3.  **Begin Phase 1 (MVP) Core VibeFlow Functionality (after real authentication is stable):**
     *   Detail the tasks for "Manually curate a small list (20-30) of high-quality public datasets and store them in MongoDB Atlas."
         *   Identify sources for public datasets (e.g., `awesome-public-datasets` on GitHub).
         *   Define the schema for storing dataset metadata in MongoDB.
@@ -45,9 +37,9 @@
     *   Focus on the "MongoDB Search -> Suggested Dataset flow."
 
 ## Active Decisions & Considerations
-*   **Frontend Framework: React** (Decision Made)
-*   **Authentication Provider: Google Cloud Identity Platform** (Decision Made)
+*   **Frontend Framework: React** (Decision Made and Implemented)
+*   **Authentication Provider: Google Cloud Identity Platform** (Decision Made, next major implementation step)
 *   **Backend Framework Choice:** Decision pending (Node.js/Express or Python/FastAPI).
 *   **AI Model Selection:** Decision pending (e.g., Google Gemini).
 *   **`AudioFlowDiagram.md`:** Current version is sufficient.
-*   **Prioritization within MVP:** Styling of remaining core UI elements (`Layout`, `MainAppPage`) and then moving to real authentication implementation are the next key steps before tackling the core VibeFlow dataset/AI features.
+*   **Prioritization:** Real authentication implementation is the next key step before tackling the core VibeFlow dataset/AI features from Phase 1 MVP.
