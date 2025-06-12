@@ -1,0 +1,16 @@
+# Ignore Google Cloud SDK directory
+Google/
+
+# Ignore VSCode workspace settings
+.vscode/
+vibeflow.code-workspace
+
+# Ignore Node modules in frontend (already in vibeflow-frontend/.gitignore but good to have root level too)
+vibeflow-frontend/node_modules/
+
+# Ignore build artifacts in frontend (already in vibeflow-frontend/.gitignore)
+vibeflow-frontend/dist/
+
+# Ignore .env files
+.env
+vibeflow-frontend/.env
