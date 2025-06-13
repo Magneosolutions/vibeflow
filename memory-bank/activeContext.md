@@ -1,18 +1,22 @@
 # Active Context: VibeFlow
 
 ## Current Work Focus
-*   **Real Authentication Implementation (Firebase/GCIP):**
-    *   Firebase SDK installed and `firebaseConfig.ts` created with project credentials.
-    *   `AuthContext.tsx` rewritten to use Firebase for all auth operations (signup, login, logout, session management via `onAuthStateChanged`).
-    *   `LoginPage.tsx`, `SignUpPage.tsx`, and `App.tsx` updated to integrate with the new Firebase-backed `AuthContext`, including error handling and loading states.
-    *   Simulated authentication has been replaced with real authentication.
+*   **Backend Project Setup (Node.js/Express with TypeScript):**
+    *   Created `vibeflow-backend` directory, initialized `npm`, installed dependencies (Express, MongoDB, Gemini SDK, etc.) and dev dependencies (TypeScript, nodemon, types).
+    *   Configured `tsconfig.json`, basic project structure (`src`, `.gitignore`, `.env`).
+    *   Implemented basic Express server in `src/index.ts` and added `package.json` scripts.
+*   **Real Authentication Implementation (Firebase/GCIP):** Complete and reportedly working.
 *   **Dataset Curation (MongoDB):** First dataset ("Google Trends - Daily Top Rising Terms (US)") successfully inserted.
 *   **Strategic Shift & Documentation:** Core concept ("Interactive Vibe Refinement & Learning Tool") and all Memory Bank documents are up-to-date.
 *   **UI & Frontend Foundation Stable.**
-*   **Version Control Up-to-Date (Locally):** All changes, including Firebase auth integration, are documented and will be committed shortly.
-*   **Cloud Run Deployment Stable.**
+*   **Version Control Up-to-Date (Locally):** All changes, including backend setup, are documented and will be committed shortly.
+*   **Cloud Run Deployment Stable (Frontend).**
 
 ## Recent Changes
+*   **Set up Initial Backend Project (Node.js/Express with TypeScript):**
+    *   Created directory, initialized npm, installed dependencies.
+    *   Configured `tsconfig.json`, project structure, `.gitignore`, `.env`.
+    *   Added basic Express server and `package.json` scripts.
 *   **Integrated Firebase Authentication:**
     *   Installed Firebase SDK.
     *   Created `firebaseConfig.ts` with project credentials.
@@ -32,21 +36,21 @@
 *   **Configured `vibeflow-frontend` for Cloud Run CI/CD (initial setup).**
 
 ## Next Steps
-1.  **Commit & Push All Recent Changes:** Commit Firebase authentication integration and associated memory bank updates to GitHub.
-2.  **Thoroughly Test Real Authentication:** Verify sign-up, sign-in with new and existing users, sign-out, error handling (wrong password, email exists, etc.), and session persistence across page reloads.
-3.  **Decide Next Focus (Post-Auth Testing):**
-    *   Continue curating datasets (target: 1 more for POC, then more later).
-    *   Define schema for an `apis` collection.
-    *   Begin backend development for "Vibe" interaction (AI analysis, MongoDB search).
-    *   Begin frontend development for displaying search results and AI feedback.
+1.  **Commit & Push All Recent Changes:** Commit backend setup and associated memory bank updates to GitHub.
+2.  **Backend Development (Core VibeFlow Logic):**
+    *   Implement MongoDB connection in `vibeflow-backend/src/services/mongoService.ts`.
+    *   Implement AI interaction (embedding generation, insights) in `vibeflow-backend/src/services/aiService.ts`.
+    *   Develop the `/api/process-vibe` endpoint in `vibeflow-backend/src/routes/vibeRoutes.ts`.
+    *   Connect the frontend "Flow" button to this new backend endpoint.
+3.  **Thoroughly Test Real Authentication:** (User confirmed this is working).
 
 ## Active Decisions & Considerations
-*   **Real Authentication Implemented:** Firebase/GCIP is now the live authentication system.
+*   **Backend Technology Stack:** Node.js with Express.js and TypeScript (Decision made and initial project setup complete).
+*   **Real Authentication Implemented & Working:** Firebase/GCIP is the live authentication system.
 *   **Initial Dataset Inserted:** One dataset is in MongoDB.
 *   **Core Product Direction: Interactive Vibe Refinement & Learning Tool** (Decision Made. Fully rolled out).
 *   **Frontend Framework: React** (Decision Made and Implemented).
-*   **Authentication Provider: Google Cloud Identity Platform** (Implementation complete, pending testing).
-*   **Backend Framework Choice:** Decision pending (Node.js/Express or Python/FastAPI).
-*   **AI Model Selection:** Decision pending (e.g., Google Gemini).
+*   **Authentication Provider: Google Cloud Identity Platform** (Implementation complete and working).
+*   **AI Model Selection:** Pending (e.g., Google Gemini - API key is in backend `.env` but integration not built).
 *   **`SystemDataFlowDiagram.md`:** Renamed from `AudioFlowDiagram.md`. The diagram in `systemPatterns.md` (which `SystemDataFlowDiagram.md` now mirrors) is the current source of truth for system flow.
 *   **Prioritization:** Commit current Memory Bank updates. Then, decide on next focus (more curation, API schema, or auth/backend).

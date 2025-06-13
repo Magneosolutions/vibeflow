@@ -44,9 +44,22 @@
     *   Defined schema for `datasets` collection.
     *   Successfully curated and inserted the first dataset ("Google Trends - Daily Top Rising Terms (US)") into the `vibeflow_db.datasets` collection in MongoDB via VS Code playground.
 *   **Navigation Fixes:** Ensured `LoginPage.tsx` and `SignUpPage.tsx` correctly navigate to the main app after successful authentication.
+*   **Backend Project Setup (Node.js/Express with TypeScript):**
+    *   Created `vibeflow-backend` directory.
+    *   Initialized `npm` and installed core dependencies (Express, MongoDB driver, Gemini SDK, dotenv, cors) and dev dependencies (TypeScript, ts-node, nodemon, types).
+    *   Configured `tsconfig.json`.
+    *   Established basic project structure (`src` with `index.ts`, `routes`, `services`, `config` subdirectories).
+    *   Created `.gitignore` and a template `.env` file (populated by user).
+    *   Implemented a basic Express server in `src/index.ts`.
+    *   Added `build`, `start`, `dev` scripts to `package.json`.
 
 ### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
-*   **Thoroughly Test Real Authentication:** Ensure sign-up, sign-in, sign-out, error handling, and session persistence work as expected.
+*   **Thoroughly Test Real Authentication:** Ensure sign-up, sign-in, sign-out, error handling, and session persistence work as expected. (User confirmed auth works).
+*   **Backend Development (Core VibeFlow Logic):**
+    *   Implement MongoDB connection in `mongoService.ts`.
+    *   Implement AI interaction (embedding, insights) in `aiService.ts`.
+    *   Develop `/api/process-vibe` endpoint in `vibeRoutes.ts` to orchestrate AI and MongoDB services.
+    *   Connect frontend "Flow" button to this backend endpoint.
 *   **Continue Curating Initial Resources (MongoDB Atlas):**
     *   Manually curate remaining public datasets (target: 19-29 more, or as decided for POC).
     *   Define schema for `apis` collection.
@@ -65,9 +78,9 @@
 *   **Focus:** Make the "Vibe Input -> AI Analysis -> MongoDB Search -> Display Suggested Datasets/APIs + Basic AI Feedback" loop functional.
 
 ### Known Issues & Blockers
-*   **Backend Tech Stack Decision:** Pending (Node.js/Express or Python/FastAPI).
-*   **AI Model Selection & Access:** Pending (e.g., Google Gemini).
+*   **Backend Tech Stack Decision:** Resolved (Node.js/Express with TypeScript).
+*   **AI Model Selection & Access:** Pending (e.g., Google Gemini - API key is in `.env` but integration not built).
 *   **`SystemDataFlowDiagram.md` Naming:** Resolved.
 
 ### Overall Project Health
-*   **Green:** Real authentication with Firebase/GCIP is now integrated. Strategic direction is clear and documented. UI reflects new direction. Frontend foundation and Cloud Run deployment are stable. Memory Bank is updated. Next steps involve testing authentication and then proceeding with core VibeFlow features (backend, AI, MongoDB integration for search).
+*   **Green:** Real authentication with Firebase/GCIP is integrated and reported working. Backend project structure for Node.js/Express is established. Strategic direction is clear and documented. UI reflects new direction. Frontend foundation and Cloud Run deployment are stable. Memory Bank is updated. Next steps involve building out backend logic for core VibeFlow features.
