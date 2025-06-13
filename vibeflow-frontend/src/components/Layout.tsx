@@ -31,7 +31,7 @@ const Layout: React.FC<LayoutProps> = ({
               onClick={() => onNavigate(isAuthenticated ? "/" : "/login")}
               className="text-4xl font-black bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent hover:from-pink-600 hover:via-blue-600 hover:to-purple-600 transition-all duration-500 transform hover:scale-110 cursor-pointer"
             >
-              VibeFlow <span className="text-xs text-red-500">DEBUG_LAYOUT_V3</span>
+              VibeFlow <span className="text-xs text-red-500">Vibe Coders Assistant</span>
             </button>
             
             {/* Navigation with popout buttons */}
