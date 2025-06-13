@@ -17,6 +17,18 @@
 *   **Technology Choices (Date: 2025-06-11):**
     *   Frontend Framework: **React**
     *   Authentication Provider: **Google Cloud Identity Platform**
+*   **Cloud Run Deployment Pattern for Nginx (Date: 2025-06-12):**
+    *   To deploy Nginx-based applications (like the React frontend) to Google Cloud Run, which assigns a dynamic `$PORT`:
+        1.  Modify `nginx.conf` to use a placeholder (e.g., `listen ${PORT};`) and save it as `nginx.conf.template`.
+        2.  Create an `entrypoint.sh` script that:
+            *   Uses `envsubst '${PORT}' < /path/to/nginx.conf.template > /etc/nginx/conf.d/default.conf` to substitute the runtime `$PORT` variable into the Nginx config.
+            *   Starts Nginx (e.g., `exec nginx -g 'daemon off;'`).
+        3.  In the `Dockerfile`:
+            *   Ensure `gettext` package (which provides `envsubst`) is installed (e.g., `RUN apk add --no-cache gettext` on Alpine).
+            *   Copy `nginx.conf.template` and `entrypoint.sh` into the image.
+            *   Make `entrypoint.sh` executable.
+            *   Set `ENTRYPOINT` to the `entrypoint.sh` script.
+    *   Cloud Build trigger "Source location" for Dockerfile should point to the directory containing the Dockerfile (e.g., `vibeflow-frontend/Dockerfile`), which then becomes the build context.
 
 ## Tool Usage Preferences
 *(This section will be populated with preferred ways of using tools for this project)*

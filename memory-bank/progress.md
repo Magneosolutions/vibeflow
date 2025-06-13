@@ -18,8 +18,14 @@
     *   Brand colors (`brand-primary`: Indigo, `brand-secondary`: Pink) confirmed in `tailwind.config.js`.
 *   **Version Control:**
     *   `.gitignore` created at project root to exclude `Google/` and other specified items.
-    *   Project initialized as a Git repository and all files pushed to `git@github.com:mgesteban/vibeflow.git`.
-*   **Memory Bank:** All core files (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`, `AudioFlowDiagram.md`) and `.clinerules` are up-to-date.
+    *   Project initialized as a Git repository.
+    *   All project files successfully pushed to the new remote `https://github.com/Magneosolutions/vibeflow` (resolved unrelated histories).
+*   **Cloud Run CI/CD Configuration (`vibeflow-frontend`):**
+    *   Dockerfile updated to use an entrypoint script and install `envsubst`.
+    *   Nginx configuration (`nginx.conf.template`) modified to use `${PORT}`.
+    *   `entrypoint.sh` created to substitute `$PORT` and start Nginx.
+    *   These changes were pushed to GitHub, enabling continuous deployment via Cloud Build to Cloud Run.
+*   **Memory Bank:** All core files (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`, `AudioFlowDiagram.md`) and `.clinerules` are up-to-date with recent changes.
 
 ### What's Left to Build (Phase 1 - MVP - High-Level)
 *   **Real Authentication Implementation:** Integrate Google Cloud Identity Platform, replacing the simulated flow.

@@ -3,20 +3,27 @@
 ## Current Work Focus
 *   **UI Styling Complete:** Core UI components (`LoginPage.tsx`, `SignUpPage.tsx`, `Layout.tsx`, `MainAppPage.tsx`) have been styled using Tailwind CSS. Brand colors in `tailwind.config.js` confirmed.
 *   **Frontend Foundation:** Vite + React + TypeScript project (`vibeflow-frontend`) is set up with basic routing, simulated authentication (`AuthContext.tsx`), and Tailwind CSS.
-*   **Version Control:** Initial project files pushed to GitHub, ignoring the `Google/` directory.
+*   **Version Control:** Initial project files pushed to GitHub, ignoring the `Google/` directory. The remote was updated to `https://github.com/Magneosolutions/vibeflow`.
+*   **Cloud Run CI/CD Configuration:** Configured `vibeflow-frontend` Dockerfile, Nginx, and an entrypoint script to support continuous deployment via Google Cloud Build to Cloud Run, listening on the `$PORT` environment variable.
 
 ## Recent Changes
+*   Configured `vibeflow-frontend` for Cloud Run CI/CD:
+    *   Modified `nginx.conf` to use `${PORT}` and renamed to `nginx.conf.template`.
+    *   Created `entrypoint.sh` to process `nginx.conf.template` and start Nginx.
+    *   Updated `Dockerfile` to include `envsubst` (via `gettext`), copy new files, and use `entrypoint.sh`.
+    *   Pushed these changes to the `Magneosolutions/vibeflow` GitHub repository.
+*   Successfully pushed all project files to the new remote `https://github.com/Magneosolutions/vibeflow`, resolving unrelated histories.
 *   Styled `Layout.tsx` with Tailwind CSS, including header, navigation, and footer.
 *   Styled `MainAppPage.tsx` with Tailwind CSS, focusing on the main input area.
 *   Confirmed current brand colors (`brand-primary`: Indigo, `brand-secondary`: Pink) in `tailwind.config.js` are acceptable.
 *   Created `.gitignore` at the project root to exclude `Google/` and other specified files/folders.
-*   Initialized Git repository and pushed all project files (excluding ignored ones) to `git@github.com:mgesteban/vibeflow.git`.
+*   Initialized Git repository and pushed all project files (excluding ignored ones) to `git@github.com:mgesteban/vibeflow.git` (old remote).
 *   Previously: Updated memory bank files, created Vite project, configured Tailwind, implemented simulated auth, styled login/signup pages.
 
 ## Next Steps
 1.  **Finalize Memory Bank Updates:**
-    *   Update `progress.md` to reflect completion of UI styling and set next steps.
-    *   `.clinerules` already reflects React & GCIP choices.
+    *   Update `progress.md` to reflect completion of UI styling, Cloud Run CI/CD setup, and set next steps.
+    *   `.clinerules` already reflects React & GCIP choices. Consider adding notes about Cloud Run Docker/Nginx patterns.
 2.  **Authentication Implementation (Real):**
     *   Begin planning and implementing actual authentication with Google Cloud Identity Platform, replacing the simulated flow.
     *   This involves frontend integration with GCIP SDK and potentially backend adjustments if required by GCIP.
