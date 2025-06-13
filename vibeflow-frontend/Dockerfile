@@ -14,6 +14,7 @@ COPY . .
 
 # Add a build argument to break cache for npm run build
 ARG CACHEBUST=1
+RUN echo "Cache bust: ${CACHEBUST}"
 # Build the application
 RUN npm run build
 
