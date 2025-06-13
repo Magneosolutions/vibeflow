@@ -12,6 +12,8 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+# Add a build argument to break cache for npm run build
+ARG CACHEBUST=1
 # Build the application
 RUN npm run build
 
