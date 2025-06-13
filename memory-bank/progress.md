@@ -39,12 +39,16 @@
     *   **Resolution:** The new Tailwind CSS styles and animations for `Layout.tsx` are now correctly applying in the deployed Cloud Run environment.
 *   **Memory Bank Overhaul for Strategic Shift:** All core files (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`) and `.clinerules` are now updated to reflect the new product direction, UI changes, and revised MVP.
 *   **`SystemDataFlowDiagram.md`:** Renamed from `AudioFlowDiagram.md` and updated to match the diagram in `systemPatterns.md`. This is the current source of truth for system flow.
+*   **Initial Dataset Curation (MongoDB):**
+    *   Defined schema for `datasets` collection.
+    *   Successfully curated and inserted the first dataset ("Google Trends - Daily Top Rising Terms (US)") into the `vibeflow_db.datasets` collection in MongoDB via VS Code playground.
 
 ### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
 *   **Real Authentication Implementation:** Integrate Google Cloud Identity Platform, replacing the simulated flow.
-*   **Curate Initial Resources (MongoDB Atlas):**
-    *   Manually curate 20-30 public datasets (metadata, sample data snippets, vector embeddings).
-    *   Manually curate 10-15 common APIs (descriptions, use cases, vector embeddings).
+*   **Continue Curating Initial Resources (MongoDB Atlas):**
+    *   Manually curate remaining public datasets (target: 19-29 more).
+    *   Define schema for `apis` collection.
+    *   Manually curate 10-15 common APIs (metadata, sample data snippets, vector embeddings).
 *   **Core "Vibe" Interaction (Backend):**
     *   Integrate AI (e.g., Gemini) for text analysis (key concept extraction, vector embedding generation).
 *   **Resource Matching & Display (Backend & Frontend):**
