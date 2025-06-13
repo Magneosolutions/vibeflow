@@ -24,13 +24,32 @@ const LoginPage: React.FC = () => {
     try {
       await login(email, password);
       // After login, the useEffect above will handle redirection if isAuthenticated becomes true.
-      // If login fails, AuthContext's demo implementation shows an alert.
-      // We could also set local error state here if login returns a status or throws an error.
-      // For the demo, if login fails, an alert is shown by AuthContext, and user stays on page.
-    } catch (err) { 
-      const errorMessage = err instanceof Error ? err.message : 'Login failed. Please try again.';
-      setError(errorMessage);
-      console.error("Login submission error:", errorMessage);
+      // After login, the useEffect above will handle redirection if isAuthenticated becomes true.
+      // If login fails, the error will be caught below.
+    } catch (err: any) { // Catch block for Firebase errors
+      let specificMessage = 'Login failed. Please check your credentials or try again.';
+      if (err.code) {
+        switch (err.code) {
+          case 'auth/user-not-found':
+          case 'auth/wrong-password':
+            specificMessage = 'Invalid email or password.';
+            break;
+          case 'auth/invalid-email':
+            specificMessage = 'The email address is not valid.';
+            break;
+          case 'auth/user-disabled':
+            specificMessage = 'This user account has been disabled.';
+            break;
+          default:
+            // Use the default specificMessage or Firebase's message for other errors
+            specificMessage = err.message || specificMessage;
+            break;
+        }
+      } else if (err instanceof Error) {
+        specificMessage = err.message;
+      }
+      setError(specificMessage);
+      console.error("Login submission error:", err);
     } finally {
       setIsSubmitting(false);
     }

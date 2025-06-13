@@ -23,13 +23,27 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
 // New AppContent component to use hooks and pass props to Layout
 const AppContent: React.FC = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, loadingAuth, currentUser } = useAuth(); // Added loadingAuth and currentUser
   const navigate = useNavigate();
 
-  const handleSignOut = () => {
-    logout(); // Call logout from context
-    navigate('/login'); // Navigate to login after logout
+  const handleSignOut = async () => { // Made async
+    try {
+      await logout(); // Call logout from context and await it
+      navigate('/login'); // Navigate to login after logout
+    } catch (error) {
+      console.error("Sign out error:", error);
+      // Optionally, display an error to the user
+    }
   };
+
+  if (loadingAuth) {
+    // You can replace this with a more sophisticated loading spinner/component
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div>Loading application...</div>
+      </div>
+    );
+  }
 
   return (
     <Layout
@@ -67,7 +81,12 @@ const App: React.FC = () => {
 
 // Helper component to decide where to navigate for '*' route
 const NavigateToCorrectRoute: React.FC = () => {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, loadingAuth } = useAuth(); // Added loadingAuth
+
+    if (loadingAuth) {
+      // Important: Don't navigate until auth state is known
+      return null; // Or a loading indicator
+    }
     return <Navigate to={isAuthenticated ? "/" : "/login"} replace />;
 };
 

@@ -28,12 +28,31 @@ const SignUpPage: React.FC = () => {
     setIsSubmitting(true);
     try {
       await signup(email, password);
-      // AuthContext's signup will set isAuthenticated for the demo.
-      // ProtectedRoute in App.tsx handles navigation.
-    } catch (err) { // This catch might not be hit if signup itself doesn't throw for demo
-      const errorMessage = err instanceof Error ? err.message : 'Sign up failed. Please try again.';
-      setError(errorMessage);
-      console.error("Signup submission error:", errorMessage);
+      // After signup, the useEffect above will handle redirection if isAuthenticated becomes true.
+      // If signup fails, the error will be caught below.
+    } catch (err: any) { // Catch block for Firebase errors
+      let specificMessage = 'Sign up failed. Please try again.';
+      if (err.code) {
+        switch (err.code) {
+          case 'auth/email-already-in-use':
+            specificMessage = 'This email address is already in use.';
+            break;
+          case 'auth/invalid-email':
+            specificMessage = 'The email address is not valid.';
+            break;
+          case 'auth/weak-password':
+            specificMessage = 'The password is too weak. Please choose a stronger password.';
+            break;
+          default:
+            // Use the default specificMessage or Firebase's message for other errors
+            specificMessage = err.message || specificMessage;
+            break;
+        }
+      } else if (err instanceof Error) {
+        specificMessage = err.message;
+      }
+      setError(specificMessage);
+      console.error("Signup submission error:", err);
     } finally {
       setIsSubmitting(false);
     }

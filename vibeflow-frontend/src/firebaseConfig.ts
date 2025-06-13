@@ -1,24 +1,23 @@
-// vibeflow-frontend/src/firebaseConfig.ts
-import { initializeApp } from "firebase/app";
+// src/firebaseConfig.ts
+import { initializeApp, getApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
-// Your web app's Firebase configuration
-// These values will be pulled from environment variables
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  // measurementId is optional, only if you use Analytics
-  // measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID 
+  apiKey: "AIzaSyCIR4WJthrMjy6SH4CkHc7PHcKwHYFSSQU",
+  authDomain: "my-app-project-461822.firebaseapp.com",
+  projectId: "my-app-project-461822",
+  storageBucket: "my-app-project-461822.firebasestorage.app",
+  messagingSenderId: "679820915121",
+  appId: "1:679820915121:web:ff68938b52ab90d1fc4d90"
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// To prevent re-initialization errors, especially with HMR (Hot Module Replacement)
+let app;
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApp(); // if already initialized, use that one
+}
 
-// Initialize Firebase Authentication and get a reference to the service
-const auth = getAuth(app);
-
-export { app, auth };
+export const auth = getAuth(app); // Export the auth instance
