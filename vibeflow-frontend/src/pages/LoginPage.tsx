@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // useNavigate removed as ProtectedRoute handles redirection
+import React, { useState, useEffect } from 'react'; // Added useEffect
+import { Link, useNavigate } from 'react-router-dom'; // Added useNavigate
 import { useAuth } from '../contexts/AuthContext';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth(); // Removed unused isAuthenticated
+  const { login, isAuthenticated } = useAuth(); // Added isAuthenticated to check login status
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -15,11 +23,11 @@ const LoginPage: React.FC = () => {
     setIsSubmitting(true);
     try {
       await login(email, password);
-      // AuthContext's login will set isAuthenticated.
-      // ProtectedRoute in App.tsx handles navigation.
+      // After login, the useEffect above will handle redirection if isAuthenticated becomes true.
       // If login fails, AuthContext's demo implementation shows an alert.
-      // We could also set local error state here if needed based on a return value from login.
-    } catch (err) { // This catch might not be hit if login itself doesn't throw for demo
+      // We could also set local error state here if login returns a status or throws an error.
+      // For the demo, if login fails, an alert is shown by AuthContext, and user stays on page.
+    } catch (err) { 
       const errorMessage = err instanceof Error ? err.message : 'Login failed. Please try again.';
       setError(errorMessage);
       console.error("Login submission error:", errorMessage);
