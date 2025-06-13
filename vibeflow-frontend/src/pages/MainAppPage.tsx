@@ -53,6 +53,13 @@ const MainAppPage: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-2xl space-y-8">
+        <div className="flex justify-center mb-8">
+          <img 
+            src="/VibeFlow.png" 
+            alt="VibeFlow Logo" 
+            className="h-28 w-auto" // Adjust size as needed, e.g., h-24, h-32
+          />
+        </div>
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Describe the application you want to build.
