@@ -1,5 +1,5 @@
 server {
-   listen 80;
+   listen ${PORT};
    server_name localhost; # This will be ignored by Cloud Run but is good for local testing
 
    location / {

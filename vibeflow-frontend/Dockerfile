@@ -18,31 +18,21 @@ RUN npm run build
 # Stage 2: Serve the application with Nginx
 FROM nginx:stable-alpine
 
+# Install gettext for envsubst
+RUN apk add --no-cache gettext
+
 # Copy the build output from the build stage to Nginx's html directory
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy a custom Nginx configuration (optional, but good for SPAs)
-# To ensure React Router works correctly, we'll add a basic Nginx config.
-# Create a file named nginx.conf in the same directory as Dockerfile with:
-# server {
-#    listen 80;
-#    server_name localhost;
-#
-#    location / {
-#        root   /usr/share/nginx/html;
-#        index  index.html index.htm;
-#        try_files $uri $uri/ /index.html; # Important for SPAs
-#    }
-#
-#    error_page   500 502 503 504  /50x.html;
-#    location = /50x.html {
-#        root   /usr/share/nginx/html;
-#    }
-# }
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy the Nginx configuration template
+COPY nginx.conf.template /etc/nginx/nginx.conf.template
 
-# Expose port 80
-EXPOSE 80
+# Copy the entrypoint script
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# The PORT environment variable will be set by Cloud Run.
+# Nginx will be configured by entrypoint.sh to listen on this port.
+
+# Set the entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
