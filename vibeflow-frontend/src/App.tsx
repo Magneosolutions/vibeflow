@@ -23,7 +23,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
 // New AppContent component to use hooks and pass props to Layout
 const AppContent: React.FC = () => {
-  const { isAuthenticated, logout, loadingAuth, currentUser } = useAuth(); // Added loadingAuth and currentUser
+  const { isAuthenticated, logout, loadingAuth } = useAuth(); // Removed currentUser as it's not used yet
   const navigate = useNavigate();
 
   const handleSignOut = async () => { // Made async

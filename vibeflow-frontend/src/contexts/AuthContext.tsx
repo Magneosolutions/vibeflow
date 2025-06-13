@@ -1,7 +1,7 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
 import type { ReactNode } from 'react'; // Import ReactNode as a type
 import {
-  type Auth, // Import Auth as a type
+  // type Auth, // Auth type is not explicitly used, can be removed
   type User, // Import User as a type
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
