@@ -50,7 +50,13 @@ const MainAppPage: React.FC = () => {
               name="vibeDescription"
               rows={10}
               className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-brand-primary focus:border-brand-primary focus:z-10 sm:text-sm"
-              placeholder="e.g., I want to create a social media app for hikers to share photos of their favorite trails and rate them by difficulty."
+              placeholder={`e.g.,
+- I want to build an app that shows me what's trending daily in the US.
+- Help me find data on rapidly growing search queries for marketing.
+- I need a dataset of top rising Google search terms to understand public interest.
+- Show me data sources for SEO keyword research based on daily trends.
+- What public datasets are available for analyzing trending topics in different US regions?
+Or describe your unique app idea...`}
             />
           </div>
 
