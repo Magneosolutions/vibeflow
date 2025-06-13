@@ -16,9 +16,23 @@ app.get('/', (req: Request, res: Response) => {
   res.send('VibeFlow Backend is Alive!');
 });
 
-// TODO: Import and use vibeRoutes
-// import vibeRoutes from './routes/vibeRoutes';
-// app.use('/api', vibeRoutes);
+// Import and use vibeRoutes
+import vibeRoutes from './routes/vibeRoutes';
+app.use('/api', vibeRoutes); // All routes in vibeRoutes will be prefixed with /api
+
+// Global error handling middleware (should be defined after all other app.use() and routes calls)
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error("[Global Error Handler]:", err.stack);
+  if (!res.headersSent) {
+    res.status(500).json({ 
+      error: 'An internal server error occurred.', 
+      // Optionally include details in development, but not production
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined 
+    });
+  } else {
+    next(err); // Delegate to default Express error handler if headers already sent
+  }
+});
 
 const startServer = async () => {
   try {
