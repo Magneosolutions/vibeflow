@@ -29,6 +29,23 @@
             *   Make `entrypoint.sh` executable.
             *   Set `ENTRYPOINT` to the `entrypoint.sh` script.
     *   Cloud Build trigger "Source location" for Dockerfile should point to the directory containing the Dockerfile (e.g., `vibeflow-frontend/Dockerfile`), which then becomes the build context.
+*   **Cloud Run Troubleshooting (Date: 2025-06-12):**
+    *   **Nginx Exiting Issue:**
+        *   Symptom: Nginx starts then immediately exits in Cloud Run logs.
+        *   Debugging: Modified `entrypoint.sh` to `set -ex`, echo `$PORT`, `cat` the generated Nginx config, and run `nginx -t` before `exec nginx`. This helped confirm config validity and pinpoint issues.
+    *   **"403 Forbidden" Access Error:**
+        *   Symptom: Cloud Run URL returns 403 error.
+        *   Cause: Service defaults to requiring authentication.
+        *   Resolution: Needed to allow unauthenticated invocations.
+    *   **IAM Policy Update Failure ("Domain Restricted Sharing"):**
+        *   Symptom: Unable to add `allUsers` to Cloud Run service due to `constraints/iam.allowedPolicyMemberDomains` organization policy.
+        *   Resolution (Admin):
+            1.  Navigate to "Organization Policies" in GCP Console.
+            2.  Find "Domain Restricted Sharing".
+            3.  Override the policy for the specific project.
+            4.  Set the project-level override "Policy values" to "Allow all".
+            5.  Save the organization policy change.
+            6.  Successfully add `allUsers` with `Cloud Run Invoker` role to the Cloud Run service permissions.
 
 ## Tool Usage Preferences
 *(This section will be populated with preferred ways of using tools for this project)*

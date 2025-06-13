@@ -20,12 +20,17 @@
     *   `.gitignore` created at project root to exclude `Google/` and other specified items.
     *   Project initialized as a Git repository.
     *   All project files successfully pushed to the new remote `https://github.com/Magneosolutions/vibeflow` (resolved unrelated histories).
-*   **Cloud Run CI/CD Configuration (`vibeflow-frontend`):**
+*   **Cloud Run CI/CD Configuration & Deployment (`vibeflow-frontend`):**
     *   Dockerfile updated to use an entrypoint script and install `envsubst`.
     *   Nginx configuration (`nginx.conf.template`) modified to use `${PORT}`.
-    *   `entrypoint.sh` created to substitute `$PORT` and start Nginx.
-    *   These changes were pushed to GitHub, enabling continuous deployment via Cloud Build to Cloud Run.
-*   **Memory Bank:** All core files (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`, `AudioFlowDiagram.md`) and `.clinerules` are up-to-date with recent changes.
+    *   `entrypoint.sh` created to substitute `$PORT`, test Nginx config, and start Nginx.
+    *   Successfully troubleshot initial Nginx exit issue by enhancing `entrypoint.sh` logging.
+    *   Successfully resolved "403 Forbidden" access issue by:
+        *   As administrator, overriding the "Domain Restricted Sharing" organization policy for the project to "Allow all".
+        *   Granting `Cloud Run Invoker` role to `allUsers` for the `vibeflow` service.
+    *   The `vibeflow-frontend` application is now live and publicly accessible via Cloud Run.
+    *   All related changes pushed to GitHub.
+*   **Memory Bank:** All core files (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`, `AudioFlowDiagram.md`) and `.clinerules` are up-to-date with recent changes, including Cloud Run deployment patterns and troubleshooting.
 
 ### What's Left to Build (Phase 1 - MVP - High-Level)
 *   **Real Authentication Implementation:** Integrate Google Cloud Identity Platform, replacing the simulated flow.

@@ -4,10 +4,16 @@
 *   **UI Styling Complete:** Core UI components (`LoginPage.tsx`, `SignUpPage.tsx`, `Layout.tsx`, `MainAppPage.tsx`) have been styled using Tailwind CSS. Brand colors in `tailwind.config.js` confirmed.
 *   **Frontend Foundation:** Vite + React + TypeScript project (`vibeflow-frontend`) is set up with basic routing, simulated authentication (`AuthContext.tsx`), and Tailwind CSS.
 *   **Version Control:** Initial project files pushed to GitHub, ignoring the `Google/` directory. The remote was updated to `https://github.com/Magneosolutions/vibeflow`.
-*   **Cloud Run CI/CD Configuration:** Configured `vibeflow-frontend` Dockerfile, Nginx, and an entrypoint script to support continuous deployment via Google Cloud Build to Cloud Run, listening on the `$PORT` environment variable.
+*   **Cloud Run CI/CD Configuration & Troubleshooting:** Configured `vibeflow-frontend` Dockerfile, Nginx, and an entrypoint script for CI/CD to Cloud Run. Successfully troubleshot deployment issues related to Nginx startup and public access permissions. The frontend is now publicly accessible via Cloud Run.
 
 ## Recent Changes
-*   Configured `vibeflow-frontend` for Cloud Run CI/CD:
+*   **Successfully Deployed `vibeflow-frontend` to Cloud Run and Made Public:**
+    *   Troubleshot Nginx exiting issue by enhancing `entrypoint.sh` with verbose logging and `nginx -t` config testing.
+    *   Resolved "403 Forbidden" error by addressing IAM permissions.
+    *   As administrator, overrode the "Domain Restricted Sharing" organization policy (`constraints/iam.allowedPolicyMemberDomains`) for the project by setting it to "Allow all".
+    *   Successfully added `allUsers` with `Cloud Run Invoker` role to the `vibeflow` Cloud Run service.
+    *   The application is now live and accessible.
+*   Configured `vibeflow-frontend` for Cloud Run CI/CD (initial setup):
     *   Modified `nginx.conf` to use `${PORT}` and renamed to `nginx.conf.template`.
     *   Created `entrypoint.sh` to process `nginx.conf.template` and start Nginx.
     *   Updated `Dockerfile` to include `envsubst` (via `gettext`), copy new files, and use `entrypoint.sh`.
