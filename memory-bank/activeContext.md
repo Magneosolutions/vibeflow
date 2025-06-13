@@ -1,22 +1,29 @@
 # Active Context: VibeFlow
 
 ## Current Work Focus
-*   **Backend Project Setup (Node.js/Express with TypeScript):**
-    *   Created `vibeflow-backend` directory, initialized `npm`, installed dependencies (Express, MongoDB, Gemini SDK, etc.) and dev dependencies (TypeScript, nodemon, types).
-    *   Configured `tsconfig.json`, basic project structure (`src`, `.gitignore`, `.env`).
-    *   Implemented basic Express server in `src/index.ts` and added `package.json` scripts.
-*   **Real Authentication Implementation (Firebase/GCIP):** Complete and reportedly working.
-*   **Dataset Curation (MongoDB):** First dataset ("Google Trends - Daily Top Rising Terms (US)") successfully inserted.
-*   **Strategic Shift & Documentation:** Core concept ("Interactive Vibe Refinement & Learning Tool") and all Memory Bank documents are up-to-date.
+*   **Backend Services & API Implementation (Initial):**
+    *   `mongoService.ts`: Implemented MongoDB connection logic.
+    *   `aiService.ts`: Implemented Gemini connection and `getTextEmbedding` function.
+    *   `vibeRoutes.ts`: Created `/api/process-vibe` endpoint (with simulated DB search).
+    *   `index.ts`: Integrated routes, error handling, and DB connection on startup.
+*   **Frontend-Backend Connection:**
+    *   `MainAppPage.tsx`: "Flow" button now calls `/api/process-vibe` and displays results/loading/errors.
+*   **Backend Project Setup (Node.js/Express with TypeScript):** Complete.
+*   **Real Authentication Implementation (Firebase/GCIP):** Complete and working.
+*   **Dataset Curation (MongoDB):** First dataset inserted.
+*   **Strategic Shift & Documentation:** All Memory Bank documents are up-to-date.
 *   **UI & Frontend Foundation Stable.**
-*   **Version Control Up-to-Date (Locally):** All changes, including backend setup, are documented and will be committed shortly.
+*   **Version Control Up-to-Date (Locally):** All changes, including backend service/API implementation, are documented and will be committed shortly.
 *   **Cloud Run Deployment Stable (Frontend).**
 
 ## Recent Changes
-*   **Set up Initial Backend Project (Node.js/Express with TypeScript):**
-    *   Created directory, initialized npm, installed dependencies.
-    *   Configured `tsconfig.json`, project structure, `.gitignore`, `.env`.
-    *   Added basic Express server and `package.json` scripts.
+*   **Implemented Initial Backend Logic:**
+    *   Developed `mongoService.ts` for DB connection.
+    *   Developed `aiService.ts` for Gemini embedding.
+    *   Developed `vibeRoutes.ts` with `/api/process-vibe` endpoint.
+    *   Updated `index.ts` to use routes and connect DB.
+*   **Connected Frontend to Backend:** Updated `MainAppPage.tsx` to call the new API endpoint.
+*   **Set up Initial Backend Project (Node.js/Express with TypeScript):** Completed.
 *   **Integrated Firebase Authentication:**
     *   Installed Firebase SDK.
     *   Created `firebaseConfig.ts` with project credentials.
@@ -36,18 +43,19 @@
 *   **Configured `vibeflow-frontend` for Cloud Run CI/CD (initial setup).**
 
 ## Next Steps
-1.  **Commit & Push All Recent Changes:** Commit backend setup and associated memory bank updates to GitHub.
-2.  **Backend Development (Core VibeFlow Logic):**
-    *   Implement MongoDB connection in `vibeflow-backend/src/services/mongoService.ts`.
-    *   Implement AI interaction (embedding generation, insights) in `vibeflow-backend/src/services/aiService.ts`.
-    *   Develop the `/api/process-vibe` endpoint in `vibeflow-backend/src/routes/vibeRoutes.ts`.
-    *   Connect the frontend "Flow" button to this new backend endpoint.
-3.  **Thoroughly Test Real Authentication:** (User confirmed this is working).
+1.  **Commit & Push All Recent Changes:** Commit backend service/API implementation, frontend connection, and associated memory bank updates to GitHub.
+2.  **Backend - Implement Real Vector Search:**
+    *   Generate and store actual embedding for the "Google Trends" dataset in MongoDB (using `aiService.getTextEmbedding` and manual update or a script).
+    *   Create Atlas Vector Search index on `datasets.description_embedding`.
+    *   Implement the `$vectorSearch` aggregation in `vibeRoutes.ts`, replacing the simulation.
+3.  **Thoroughly Test End-to-End Flow:** From vibe input on frontend to (simulated then real) search results.
 
 ## Active Decisions & Considerations
-*   **Backend Technology Stack:** Node.js with Express.js and TypeScript (Decision made and initial project setup complete).
+*   **Backend Services (Initial):** `mongoService`, `aiService` (embedding), and `/api/process-vibe` route are implemented.
+*   **Frontend Connected to Backend:** `MainAppPage.tsx` calls the API.
+*   **Backend Technology Stack:** Node.js with Express.js and TypeScript (Setup complete, initial services built).
 *   **Real Authentication Implemented & Working:** Firebase/GCIP is the live authentication system.
-*   **Initial Dataset Inserted:** One dataset is in MongoDB.
+*   **Initial Dataset Inserted:** One dataset is in MongoDB (still needs its `description_embedding` populated with a real vector).
 *   **Core Product Direction: Interactive Vibe Refinement & Learning Tool** (Decision Made. Fully rolled out).
 *   **Frontend Framework: React** (Decision Made and Implemented).
 *   **Authentication Provider: Google Cloud Identity Platform** (Implementation complete and working).

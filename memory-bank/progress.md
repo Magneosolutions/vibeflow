@@ -52,16 +52,22 @@
     *   Created `.gitignore` and a template `.env` file (populated by user).
     *   Implemented a basic Express server in `src/index.ts`.
     *   Added `build`, `start`, `dev` scripts to `package.json`.
+*   **Backend Services & API Endpoint (Initial Implementation):**
+    *   `mongoService.ts`: Implemented MongoDB connection logic and integrated into server startup.
+    *   `aiService.ts`: Implemented Gemini connection and `getTextEmbedding` function (using "embedding-001" model).
+    *   `vibeRoutes.ts`: Created `/api/process-vibe` POST endpoint to receive vibe text, call AI service for embedding, and includes placeholder for DB vector search (currently simulates search).
+    *   `index.ts`: Integrated `vibeRoutes` and a global error handler.
+*   **Frontend-Backend Connection:**
+    *   `MainAppPage.tsx`: "Flow" button now calls the `/api/process-vibe` backend endpoint and displays loading/results/errors.
 
 ### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
-*   **Thoroughly Test Real Authentication:** Ensure sign-up, sign-in, sign-out, error handling, and session persistence work as expected. (User confirmed auth works).
-*   **Backend Development (Core VibeFlow Logic):**
-    *   Implement MongoDB connection in `mongoService.ts`.
-    *   Implement AI interaction (embedding, insights) in `aiService.ts`.
-    *   Develop `/api/process-vibe` endpoint in `vibeRoutes.ts` to orchestrate AI and MongoDB services.
-    *   Connect frontend "Flow" button to this backend endpoint.
+*   **Thoroughly Test Real Authentication:** (User confirmed auth works).
+*   **Backend - Implement Real Vector Search:**
+    *   Generate and store actual embedding for the "Google Trends" dataset in MongoDB.
+    *   Create Atlas Vector Search index on `datasets.description_embedding`.
+    *   Implement the `$vectorSearch` aggregation in `vibeRoutes.ts`.
 *   **Continue Curating Initial Resources (MongoDB Atlas):**
-    *   Manually curate remaining public datasets (target: 19-29 more, or as decided for POC).
+    *   Manually curate remaining public datasets (target: 1 more for POC, then more later, as decided).
     *   Define schema for `apis` collection.
     *   Manually curate 10-15 common APIs (metadata, sample data snippets, vector embeddings).
 *   **Core "Vibe" Interaction (Backend):**
@@ -79,8 +85,8 @@
 
 ### Known Issues & Blockers
 *   **Backend Tech Stack Decision:** Resolved (Node.js/Express with TypeScript).
-*   **AI Model Selection & Access:** Pending (e.g., Google Gemini - API key is in `.env` but integration not built).
+*   **AI Model Selection & Access:** Google Gemini selected. API key in `.env`. `aiService.ts` initializes client and `getTextEmbedding` is implemented. `getAIFeedback` is a placeholder.
 *   **`SystemDataFlowDiagram.md` Naming:** Resolved.
 
 ### Overall Project Health
-*   **Green:** Real authentication with Firebase/GCIP is integrated and reported working. Backend project structure for Node.js/Express is established. Strategic direction is clear and documented. UI reflects new direction. Frontend foundation and Cloud Run deployment are stable. Memory Bank is updated. Next steps involve building out backend logic for core VibeFlow features.
+*   **Yellow:** Significant progress on backend MVP. Core services (DB, AI embedding) and API endpoint are initially implemented. Frontend is connected. Next critical steps are implementing actual vector search and populating the first dataset with a real embedding. Authentication is working.
