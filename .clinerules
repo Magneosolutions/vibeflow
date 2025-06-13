@@ -1,9 +1,9 @@
 # Cline's Project Intelligence & Rules for VibeFlow
 
 ## Core Directives
-1.  **Memory Bank is Paramount:** ALWAYS read ALL memory bank files (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`, `AudioFlowDiagram.md`, and any others in `memory-bank/`) at the start of EVERY session. My effectiveness depends entirely on this.
+1.  **Memory Bank is Paramount:** ALWAYS read ALL memory bank files (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`, `SystemDataFlowDiagram.md`, and any others in `memory-bank/`) at the start of EVERY session. My effectiveness depends entirely on this.
 2.  **Prioritize Functionality and Speed:** Every feature, design choice, and implementation must support optimal performance and intuitive usability. The user experience should be frictionless, with zero unnecessary latency or complexity. If any user suggestions or requests compromise these core principles, I must remind them immediately and suggest alternatives.
-3.  **Adhere to `AudioFlowDiagram.md`:** Always check `memory-bank/AudioFlowDiagram.md` and do not deviate from the documented flow without explicit instruction and updating the diagram. (Note: Currently, this diagram represents the general system data flow).
+3.  **Adhere to `SystemDataFlowDiagram.md`:** Always check `memory-bank/SystemDataFlowDiagram.md` (which reflects the diagram in `systemPatterns.md`) and do not deviate from the documented flow without explicit instruction and updating the diagram.
 4.  **Systematic Problem Solving:** When resolving issues, think recursively and systematically. Consider all dependencies and potential impacts of changes across the codebase. Verify fixes maintain overall system architecture integrity.
 5.  **Documentation First:** Update Memory Bank files (especially `activeContext.md` and `progress.md`) *before* or *immediately after* implementing significant changes, discovering new patterns, or when context needs clarification. If the user explicitly says "update memory bank", review ALL memory bank files.
 6.  **Incremental Updates to `.clinerules`:** This file is a living document. Add new rules, patterns, or preferences as they are discovered and validated.
@@ -13,7 +13,7 @@
 
 *   **Initial Setup (Date: 2025-06-11):**
     *   Created all core Memory Bank files.
-    *   `AudioFlowDiagram.md` currently reflects the general system data flow from `systemPatterns.md`.
+    *   `SystemDataFlowDiagram.md` (formerly `AudioFlowDiagram.md`) reflects the general system data flow from `systemPatterns.md`.
 *   **Technology Choices (Date: 2025-06-11):**
     *   Frontend Framework: **React**
     *   Authentication Provider: **Google Cloud Identity Platform**
@@ -55,9 +55,9 @@
 ## User Preferences & Workflow
 *(This section will be populated based on interactions and feedback)*
 
-*   User emphasizes adherence to their custom instructions, particularly regarding Memory Bank usage and the `AudioFlowDiagram.md`.
+*   User emphasizes adherence to their custom instructions, particularly regarding Memory Bank usage and the `SystemDataFlowDiagram.md`.
 
 ## Known Challenges & Considerations (from `progress.md`)
-*   Clarification needed on the specific meaning of "Audio Flow" for `AudioFlowDiagram.md` if it's different from the general system data flow. (Currently using general system flow).
+*   The `SystemDataFlowDiagram.md` (formerly `AudioFlowDiagram.md`) now accurately reflects the system data flow as per `systemPatterns.md`. The naming confusion is resolved.
 *   Backend tech stack decision (e.g., Node.js/Express or Python/FastAPI) is still pending.
 *   AI Model selection and access details need to be finalized.

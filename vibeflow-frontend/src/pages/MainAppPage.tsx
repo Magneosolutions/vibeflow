@@ -12,6 +12,34 @@ const MainAppPage: React.FC = () => {
             Let your ideas flow, and we'll help you bring them to life.
           </p>
         </div>
+
+        <div className="mt-6 text-center">
+          <h3 className="text-xl font-semibold text-gray-800">
+            Welcome to VibeFlow: Your Idea Co-Pilot!
+          </h3>
+          <p className="mt-2 text-sm text-gray-700">
+            VibeFlow helps you transform your initial 'vibe' into a clear, actionable plan. 
+            Instead of just generating code, we're your interactive partner to:
+          </p>
+          <ul className="mt-3 list-disc list-inside text-left inline-block text-sm text-gray-700 space-y-1">
+            <li>
+              <strong>Discover Resources:</strong> Uncover relevant public datasets and APIs with MongoDB Atlas Search.
+            </li>
+            <li>
+              <strong>Refine Your Vision:</strong> Explore 'what if' scenarios and understand their impact.
+            </li>
+            <li>
+              <strong>Learn As You Go:</strong> Get curated links to tutorials and docs tailored to your idea.
+            </li>
+            <li>
+              <strong>Get a 'Vibe Check':</strong> Receive AI feedback on feasibility and potential challenges.
+            </li>
+          </ul>
+          <p className="mt-3 text-sm text-gray-600">
+            Ready to explore your idea? Let it flow below!
+          </p>
+        </div>
+
         <div className="mt-8 space-y-6">
           <div>
             <label htmlFor="vibeDescription" className="sr-only">

@@ -1,8 +1,10 @@
 # Progress: VibeFlow
 
-## Current Status: Core UI Styling Complete, Frontend Foundation Stable, Ready for Authentication
+## Current Status: Strategic Shift to "Interactive Vibe Refinement & Learning Tool" - Memory Bank Updated, UI Text Updated. Ready for Real Authentication.
 
 ### What Works (Implemented & Documented)
+*   **Strategic Product Direction Defined:** VibeFlow is now an "Interactive Vibe Refinement & Learning Tool." Core Memory Bank documents (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, this file) reflect this new direction.
+*   **UI Updated for New Direction:** `vibeflow-frontend/src/pages/MainAppPage.tsx` updated with introductory text explaining the new focus.
 *   **Frontend Project Setup (Vite + React + TypeScript):** `vibeflow-frontend` directory created and configured.
 *   **Basic Routing:** Implemented using `react-router-dom` for `/login`, `/signup`, and `/` (main app).
 *   **Simulated Authentication Flow:**
@@ -35,30 +37,31 @@
     *   TypeScript errors related to `<style jsx>` were resolved by moving animations to Tailwind config and reinstalling dependencies.
     *   Cloud Build and Cloud Run deployments were successful.
     *   **Resolution:** The new Tailwind CSS styles and animations for `Layout.tsx` are now correctly applying in the deployed Cloud Run environment.
-*   **Memory Bank:** All core files (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`, `AudioFlowDiagram.md`) and `.clinerules` are up-to-date with recent changes, including Cloud Run deployment patterns and troubleshooting.
+*   **Memory Bank Overhaul for Strategic Shift:** All core files (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`) and `.clinerules` are now updated to reflect the new product direction, UI changes, and revised MVP.
+*   **`SystemDataFlowDiagram.md`:** Renamed from `AudioFlowDiagram.md` and updated to match the diagram in `systemPatterns.md`. This is the current source of truth for system flow.
 
-### What's Left to Build (Phase 1 - MVP - High-Level)
+### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
 *   **Real Authentication Implementation:** Integrate Google Cloud Identity Platform, replacing the simulated flow.
-*   **Dataset Curation & Storage:**
-    *   Manually curate 20-30 public datasets.
-    *   Store them in MongoDB Atlas (define schema, populate).
-*   **Core "Vibe" Input & AI Analysis:**
-    *   Build frontend for "Vibe" text input.
-    *   Integrate AI (e.g., Gemini) for text analysis and vector embedding generation.
-*   **MongoDB Vector Search Implementation:**
-    *   Set up MongoDB Atlas for Vector Search.
-    *   Implement backend logic to query datasets based on vibe embedding.
-*   **Basic Output:**
-    *   Provide a link to a single, hard-coded boilerplate GitHub project (no code generation yet).
-*   **End-to-End Flow:** Ensure the "MongoDB Search -> Suggested Dataset (link)" flow is functional.
+*   **Curate Initial Resources (MongoDB Atlas):**
+    *   Manually curate 20-30 public datasets (metadata, sample data snippets, vector embeddings).
+    *   Manually curate 10-15 common APIs (descriptions, use cases, vector embeddings).
+*   **Core "Vibe" Interaction (Backend):**
+    *   Integrate AI (e.g., Gemini) for text analysis (key concept extraction, vector embedding generation).
+*   **Resource Matching & Display (Backend & Frontend):**
+    *   Implement MongoDB Atlas Vector Search to match a vibe to datasets and APIs.
+    *   Develop backend endpoints to serve these suggestions.
+    *   Develop frontend components to display suggested datasets and APIs.
+*   **Basic AI "Vibe Check" (Backend & Frontend):**
+    *   Implement a simple AI-driven feedback mechanism (e.g., on scope, common considerations).
+    *   Display this feedback on the frontend.
+*   **Curated Learning Links (Static Initial Set - Frontend):**
+    *   Display a small, static set of general learning links relevant to app development.
+*   **Focus:** Make the "Vibe Input -> AI Analysis -> MongoDB Search -> Display Suggested Datasets/APIs + Basic AI Feedback" loop functional.
 
 ### Known Issues & Blockers
-*   **Clarification on "AudioFlowDiagram.md":** The existing `AudioFlowDiagram.md` is considered sufficient.
-*   **Tech Stack Decisions:**
-    *   Frontend: **React** (Confirmed & Implemented)
-    *   Authentication: **Google Cloud Identity Platform** (Confirmed, simulated on frontend)
-    *   Backend: Decision pending (Node.js/Express or Python/FastAPI).
-*   **AI Model Selection & Access:** Decision pending for AI model (e.g., Google Gemini).
+*   **Backend Tech Stack Decision:** Pending (Node.js/Express or Python/FastAPI).
+*   **AI Model Selection & Access:** Pending (e.g., Google Gemini).
+*   **`SystemDataFlowDiagram.md` Naming:** Resolved.
 
 ### Overall Project Health
-*   **Green:** Core UI styling is complete, and the frontend foundation with simulated authentication is stable. The project is version controlled on GitHub. Memory Bank is fully updated. The next major step is implementing real authentication.
+*   **Green:** Strategic direction clarified and documented. UI updated to reflect new direction. Frontend foundation and Cloud Run deployment are stable. Memory Bank is fully updated with the strategic shift. Next major step is real authentication, followed by the revised Phase 1 MVP.

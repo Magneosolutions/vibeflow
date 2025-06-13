@@ -4,112 +4,80 @@
 VibeFlow will be a web application with the following major components:
 
 1.  **Frontend (Client-Side):**
-    *   Built with a modern JavaScript framework (e.g., React, Vue, or Svelte - to be decided, prioritizing speed and ease of use).
+    *   Built with React and TypeScript.
     *   Handles user input (the "vibe" description).
-    *   Displays suggestions (datasets, architectures, APIs).
-    *   Manages user selections for the starter kit.
-    *   Initiates the "Build My Starter Kit" and "Deploy to Google Cloud" actions.
+    *   Displays suggestions (datasets, APIs, learning resources, AI feedback).
+    *   Facilitates interactive exploration of suggestions.
+    *   Handles user interactions for "what if" scenarios and vibe refinement.
     *   Handles user authentication (sign-up, login, sign-out) interactions.
 
 2.  **Backend (Server-Side):**
-    *   Built with a scalable framework (e.g., Node.js/Express, Python/FastAPI - to be decided, prioritizing integration with AI and cloud services).
+    *   Built with a scalable framework (e.g., Node.js/Express, Python/FastAPI - to be decided).
     *   **Authentication Service:**
         *   Manages user registration, login (e.g., issuing JWTs), and logout.
-        *   Integrates with an identity provider or manages user credentials securely.
-    *   **Vibe Analysis Service:**
+        *   Integrates with Google Cloud Identity Platform.
+    *   **Vibe Analysis & Feedback Service:**
         *   Receives the user's text input (requires authenticated session).
         *   Communicates with an external AI service (e.g., Google Gemini API) to:
             *   Extract key concepts, features, and potential data models.
             *   Generate a vector embedding of the "vibe."
-    *   **Data Matching Service:**
-        *   Queries MongoDB Atlas:
-            *   Uses Vector Search with the generated embedding to find semantically similar public datasets and project boilerplates.
-            *   Uses Atlas Search (keyword-based) for complementary dataset discovery.
-    *   **Starter Kit Generation Service:**
-        *   Communicates with an external AI service (e.g., Google Gemini API or a specialized code generation model) to generate a basic codebase (frontend components, backend API endpoints, data schema) based on the user's vibe, selected dataset, and chosen architecture.
-        *   Creates a new GitHub repository for the user via the GitHub API.
-        *   Pushes the generated code to the new repository.
-    *   **Provisioning Service:**
-        *   Communicates with MongoDB Atlas API to:
-            *   Create a new free-tier cluster.
-            *   Create necessary collections.
-            *   Optionally, load the selected public dataset.
-        *   Generates a `.env` file with the MongoDB connection string and any selected Google API keys, and includes it in the generated GitHub repository.
-    *   **Deployment Service:**
-        *   Communicates with Google Cloud Build API to trigger a pre-configured build pipeline.
-        *   The pipeline containers the application from the user's GitHub repo and deploys it to Google Cloud Run.
-        *   Returns the public URL of the deployed application to the frontend.
+            *   Generate AI-driven feedback/insights ("Vibe Check") on feasibility, complexity, etc.
+        *   Handles "what if" scenario processing by re-analyzing modified vibes.
+    *   **Resource Discovery Service (Data Matching):**
+        *   Queries MongoDB Atlas using vector embeddings and keywords (from Vibe Analysis Service) to find:
+            *   Semantically similar public datasets.
+            *   Relevant APIs.
+            *   (Future) Relevant open-source components/patterns.
+            *   Curated learning resources (tutorials, documentation).
+        *   Retrieves metadata for these resources to be displayed on the frontend.
 
 3.  **Database (MongoDB Atlas):**
-    *   **Curated Datasets Collection:** Stores metadata and potentially the actual data of public datasets. Each entry will include:
-        *   Name, description, source, category, keywords.
-        *   Vector embedding of its description/content for semantic search.
-    *   **Boilerplate Projects Collection:** Stores metadata about open-source project boilerplates. Each entry will include:
-        *   Name, description, tech stack, features, link to GitHub repo.
-        *   Vector embedding for semantic search.
-    *   User-generated clusters are provisioned separately for each user's starter kit.
+    *   **Curated Resource Collections:**
+        *   **Datasets Collection:** Stores metadata about public datasets (name, description, source, category, keywords, sample data snippets, vector embeddings).
+        *   **APIs Collection:** Stores metadata about APIs (name, description, common use cases, endpoint examples, links to documentation, vector embeddings).
+        *   **(Future) Learning Resources Collection:** Stores metadata about tutorials, articles, documentation (title, summary, link, tags, vector embeddings).
+        *   **(Future) Open-Source Components/Patterns Collection:** Stores metadata about reusable code or architectural patterns (name, description, link, tech stack, vector embeddings).
 
 4.  **External Services:**
-    *   **AI Model (e.g., Google Gemini):** For natural language understanding, feature extraction, vector embedding generation, and code generation.
-    *   **GitHub API:** For creating repositories and pushing code.
+    *   **AI Model (e.g., Google Gemini):** For natural language understanding, feature extraction, vector embedding generation, and generating insights/feedback ("Vibe Check").
     *   **Google Cloud Platform:**
-        *   **Cloud Build:** For CI/CD and deploying user applications.
-        *   **Cloud Run:** For hosting user applications as serverless web apps.
-        *   **Identity Platform (or similar):** For managing user identities and authentication flows, if a managed service is chosen.
-        *   (Potentially other Google APIs as recommended to users, e.g., Maps, Natural Language).
+        *   **Cloud Run:** For hosting the VibeFlow platform (frontend and backend services).
+        *   **Identity Platform:** For managing user identities and authentication flows.
+        *   (Potentially other Google APIs as recommended to users, e.g., Maps, Natural Language, if relevant to their vibe).
 
 ## Key Technical Decisions & Patterns
-*   **Microservices-oriented Backend (Potentially):** While starting monolithic for MVP, the backend services (Vibe Analysis, Data Matching, Generation, Provisioning, Deployment) are designed to be potentially separable into microservices for scalability.
-*   **API-Driven:** All interactions between frontend, backend, and external services will be through well-defined APIs.
-*   **Vector Search as a Core Technology:** MongoDB Atlas Vector Search is central to matching user intent with relevant resources. This is a primary differentiator.
-*   **AI-Assisted Code Generation:** Leveraging LLMs to generate starter code significantly speeds up the process. The quality and relevance of this generated code will be a key focus.
-*   **Infrastructure as Code (for user apps):** The `cloudbuild.yaml` (or similar) in the generated starter kit will define the deployment, making it transparent and customizable.
-*   **Stateless Application Design (for user apps):** Generated starter apps should ideally be stateless to leverage serverless benefits on Cloud Run. State will be managed in MongoDB.
-*   **Emphasis on Free Tiers:** To make VibeFlow accessible, it will leverage free tiers of MongoDB Atlas and Google Cloud for the generated starter kits where possible.
+*   **Microservices-oriented Backend (Potentially):** Backend services (Authentication, Vibe Analysis & Feedback, Resource Discovery) can be designed for future separation.
+*   **API-Driven:** All interactions between frontend and backend services will be through well-defined APIs.
+*   **Vector Search as a Core Technology:** MongoDB Atlas Vector Search is central to matching user intent with relevant datasets, APIs, and learning resources.
+*   **AI-Assisted Insight and Feedback:** Leveraging LLMs to provide users with valuable feedback on their ideas and to help tailor resource suggestions.
+*   **Focus on Curated Content:** The quality, relevance, and breadth of the curated datasets, API information, and learning resources in MongoDB are paramount to VibeFlow's value.
+*   **Interactive Loop Design:** Frontend and backend must support an iterative process where users can refine their vibe, explore different facets of their idea, and receive updated suggestions and feedback.
+*   **Emphasis on Free Tiers (for VibeFlow Platform):** Utilize free or cost-effective tiers of GCP and MongoDB Atlas for hosting and operating the VibeFlow platform itself.
 
-## Component Relationships (High-Level)
+## Component Relationships (High-Level - Revised for Interactive Refinement)
 ```mermaid
 graph TD
     UserInterface["Frontend (User Interface)"] -- "Auth Credentials (Signup/Login)" --> BackendAPI["Backend API Gateway"]
-    BackendAPI -- "Auth Request" --> AuthService["Authentication Service"]
+    BackendAPI -- "Auth Request" --> AuthService["Authentication Service (GCIP)"]
     AuthService -- "Validate/Create User, Issue Token" --> BackendAPI
     BackendAPI -- "Auth Token/Session" --> UserInterface
 
-    UserInterface -- "User Input (Vibe) (Authenticated)" --> BackendAPI
+    UserInterface -- "User Input (Vibe / Refined Vibe) (Authenticated)" --> BackendAPI
 
-    BackendAPI -- "Analyze Request (Authenticated)" --> VibeAnalysisService["Vibe Analysis Service"]
-    VibeAnalysisService -- "Text" --> AI_NLP["AI Model (NLP, Embedding)"]
-    AI_NLP -- "Concepts, Vector" --> VibeAnalysisService
-    VibeAnalysisService -- "Vector, Keywords" --> DataMatchingService["Data Matching Service"]
+    BackendAPI -- "Analyze & Feedback Request (Authenticated)" --> VibeAnalysisFeedbackService["Vibe Analysis & Feedback Service"]
+    VibeAnalysisFeedbackService -- "Text for Analysis" --> AI_Model["AI Model (NLP, Embedding, Insight Generation)"]
+    AI_Model -- "Concepts, Vector, AI Feedback" --> VibeAnalysisFeedbackService
+    VibeAnalysisFeedbackService -- "Vector, Keywords, AI Feedback" --> BackendAPI
 
-    DataMatchingService -- "Vector/Keyword Query" --> MongoDB["MongoDB Atlas (Curated Datasets & Boilerplates)"]
-    MongoDB -- "Matching Results" --> DataMatchingService
-    DataMatchingService -- "Suggestions" --> BackendAPI
-    BackendAPI -- "Display Suggestions" --> UserInterface
-
-    UserInterface -- "User Selections (Dataset, Architecture)" --> BackendAPI
-    BackendAPI -- "Generate Kit Request" --> StarterKitService["Starter Kit Generation Service"]
-    StarterKitService -- "Generation Prompts" --> AI_CodeGen["AI Model (Code Generation)"]
-    AI_CodeGen -- "Generated Code" --> StarterKitService
-    StarterKitService -- "Create Repo, Push Code" --> GitHubAPI["GitHub API"]
-    GitHubAPI -- "Repo Link" --> StarterKitService
-
-    StarterKitService -- "Provision DB Request" --> ProvisioningService["Provisioning Service"]
-    ProvisioningService -- "Create Cluster/Collections" --> MongoDB_AtlasAPI["MongoDB Atlas API"]
-    MongoDB_AtlasAPI -- "Connection String" --> ProvisioningService
-    ProvisioningService -- "DB Details, API Keys" --> StarterKitService
-    StarterKitService -- ".env file" --> GitHubAPI %% Add to repo
-
-    StarterKitService -- "Kit Ready (Repo Link)" --> BackendAPI
-    BackendAPI -- "GitHub Repo Link" --> UserInterface
-
-    UserInterface -- "Deploy Request" --> BackendAPI
-    BackendAPI -- "Deploy App Request" --> DeploymentService["Deployment Service"]
-    DeploymentService -- "Trigger Pipeline (Repo Link)" --> GoogleCloudBuildAPI["Google Cloud Build API"]
-    GoogleCloudBuildAPI -- "Build & Deploy" --> GoogleCloudRun["Google Cloud Run (User's App)"]
-    GoogleCloudRun -- "Public URL" --> DeploymentService
-    DeploymentService -- "Deployed App URL" --> BackendAPI
-    BackendAPI -- "Public URL" --> UserInterface
+    BackendAPI -- "Discover Resources Request (Vector, Keywords)" --> ResourceDiscoveryService["Resource Discovery Service"]
+    ResourceDiscoveryService -- "Vector/Keyword Query" --> MongoDB_Resources["MongoDB Atlas (Curated Datasets, APIs, Learning Links)"]
+    MongoDB_Resources -- "Matching Resource Metadata" --> ResourceDiscoveryService
+    ResourceDiscoveryService -- "Suggested Resources" --> BackendAPI
+    
+    BackendAPI -- "Display Suggestions (Datasets, APIs, Learning Links, AI Feedback)" --> UserInterface
+    
+    %% User can refine vibe and loop back
+    UserInterface -- "Refine Vibe / Ask 'What If?'" --> BackendAPI 
 ```
 
-This diagram illustrates the primary flow and interactions between the system components. The focus is on modular services that handle specific responsibilities, orchestrated by the backend API.
+This diagram illustrates the revised flow focusing on iterative refinement and resource discovery. The VibeFlow platform itself is hosted on Google Cloud Run.

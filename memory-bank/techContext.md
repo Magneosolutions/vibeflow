@@ -1,13 +1,13 @@
 # Tech Context: VibeFlow
 
 ## Core Technologies
-The VibeFlow platform itself and the starter kits it generates will rely on a combination of modern technologies, prioritizing scalability, ease of integration, and developer experience.
+The VibeFlow platform, as an **Interactive Vibe Refinement & Learning Tool**, will rely on a combination of modern technologies, prioritizing scalability, ease of integration, and an interactive user experience.
 
 1.  **Frontend (VibeFlow Platform):**
     *   **Framework: React**
-        *   *Reasoning:* Chosen for its rich ecosystem, performance, component-based architecture, strong community support, and suitability for building dynamic and interactive UIs.
-    *   **Language:** JavaScript/TypeScript. TypeScript is preferred for type safety and maintainability.
-    *   **Styling:** CSS-in-JS (e.g., Styled Components, Emotion) or utility-first CSS (e.g., Tailwind CSS).
+        *   *Reasoning:* Chosen for its rich ecosystem, performance, component-based architecture, strong community support, and suitability for building dynamic and highly interactive UIs necessary for vibe exploration and refinement.
+    *   **Language:** TypeScript (preferred for type safety and maintainability).
+    *   **Styling:** Tailwind CSS (already implemented).
 
 2.  **Backend (VibeFlow Platform):**
     *   **Framework:** To be decided (e.g., Node.js with Express.js/Fastify, Python with FastAPI/Django).
@@ -16,33 +16,33 @@ The VibeFlow platform itself and the starter kits it generates will rely on a co
     *   **API Specification:** OpenAPI (Swagger) for clear API documentation and contract.
     *   **Authentication:** JWT (JSON Web Tokens) for securing APIs and managing user sessions. Consideration for OAuth 2.0 if third-party logins are desired in the future.
 
-3.  **Database (VibeFlow Platform & Generated Apps):**
+3.  **Database (VibeFlow Platform):**
     *   **MongoDB Atlas:**
-        *   Primary data store for curated public datasets, boilerplate project metadata.
-        *   **Atlas Vector Search:** Core for semantic matching of user "vibes" to datasets/boilerplates.
-        *   **Atlas Search:** For keyword-based filtering and faceted search.
-        *   Used for provisioning new, free-tier clusters for user-generated applications.
+        *   Primary data store for curated collections: public datasets, API metadata, learning resources, and (future) open-source components/patterns.
+        *   **Atlas Vector Search:** Core for semantic matching of user "vibes" to these curated resources.
+        *   **Atlas Search:** For keyword-based filtering and faceted search across curated collections.
+        *   VibeFlow will **not** be provisioning MongoDB clusters for users in this model.
 
 4.  **AI & Machine Learning:**
     *   **Google Gemini API (or similar LLM):**
         *   Natural Language Processing (NLP): To understand user input, extract entities, and discern intent.
-        *   Vector Embedding Generation: To convert user "vibes" and dataset descriptions into vectors for semantic search.
-        *   Code Generation: To create starter codebases (frontend, backend, data schemas).
-    *   *Considerations:* Model capabilities, API limits, cost, ease of integration.
+        *   Vector Embedding Generation: To convert user "vibes" and resource descriptions into vectors for semantic search.
+        *   **Insight & Feedback Generation:** To provide the "Vibe Check," suggest data usage, explain resource relevance, and facilitate "what if" scenario analysis.
+        *   **(Limited) Code Snippet Generation:** Potentially for illustrating API usage or simple data interaction examples, not full-scale codebase generation.
+    *   *Considerations:* Model capabilities for nuanced feedback and explanation, API limits, cost, ease of integration.
 
-5.  **Cloud Platform (VibeFlow Platform & Generated Apps):**
+5.  **Cloud Platform (VibeFlow Platform):**
     *   **Google Cloud Platform (GCP):**
-        *   **Google Cloud Run:** For deploying and hosting the VibeFlow backend and user-generated serverless web applications. Chosen for its simplicity, scalability, and pay-per-use model.
-        *   **Google Cloud Build:** For automating the CI/CD pipeline (containerization and deployment) of user-generated applications.
-        *   **Google Cloud APIs:** Integration with various Google APIs (e.g., Maps, Natural Language) as potential recommendations for user starter kits.
+        *   **Google Cloud Run:** For deploying and hosting the VibeFlow backend and frontend services. Chosen for its simplicity, scalability, and pay-per-use model.
         *   **Google Cloud Identity Platform:** Chosen for managing user authentication.
-            *   *Reasoning:* Provides robust, secure, and scalable identity management, handling sign-up/sign-in flows, multi-factor authentication, and integration with various identity providers if needed in the future. Reduces development burden for custom auth solution.
+            *   *Reasoning:* Provides robust, secure, and scalable identity management.
+        *   (Potentially other Google APIs if relevant for direct integration into VibeFlow's analysis or as examples, e.g., Natural Language API for deeper text analysis).
+        *   VibeFlow will **not** be using Google Cloud Build to deploy user applications in this model.
 
-6.  **Version Control & CI/CD (Generated Apps):**
-    *   **GitHub:**
-        *   Generated starter kits will be pushed to new GitHub repositories under the user's control (or a VibeFlow organization initially).
-        *   GitHub API will be used for programmatic repository creation.
-    *   **Google Cloud Build:** Triggered by commits to the GitHub repository (for user apps) to build and deploy.
+6.  **Version Control & CI/CD (VibeFlow Platform):**
+    *   **GitHub:** For VibeFlow's own codebase.
+    *   **Google Cloud Build:** For VibeFlow's own CI/CD pipeline, deploying the platform to Cloud Run.
+    *   VibeFlow will **not** be interacting with user GitHub repositories or managing their CI/CD in this model.
 
 ## Development Setup & Environment
 *   **Local Development:**
@@ -56,27 +56,20 @@ The VibeFlow platform itself and the starter kits it generates will rely on a co
 ## Technical Constraints & Considerations
 *   **API Rate Limits:** Interactions with external APIs (AI models, GitHub, GCP, MongoDB Atlas) will be subject to rate limits. Implement appropriate error handling, retries, and potentially queuing mechanisms.
 *   **Cost Management:**
-    *   Leverage free tiers of MongoDB Atlas and GCP for user-generated apps as much as possible.
-    *   Monitor API usage for AI services and cloud services to manage costs for the VibeFlow platform itself.
+    *   Monitor API usage for AI services (Gemini) and cloud services (Cloud Run, MongoDB Atlas) to manage costs for the VibeFlow platform itself.
 *   **Security:**
-    *   Securely manage API keys and credentials.
+    *   Securely manage API keys and credentials for VibeFlow's own services.
     *   Validate all user inputs.
-    *   Implement secure password storage (hashing and salting if not using a managed identity service).
-    *   Protect against common web vulnerabilities (XSS, CSRF, SQLi - though NoSQL is used, injection is still a concern).
-    *   Ensure generated code follows basic security best practices.
-    *   Protect user data and PII.
-*   **Scalability:** Design backend services to be scalable, potentially using serverless functions or container orchestration. MongoDB Atlas and Cloud Run are inherently scalable. Authentication service must also be scalable.
-*   **Code Generation Quality:** The utility of VibeFlow heavily depends on the quality, correctness, and relevance of the AI-generated code. This will require careful prompt engineering and potentially fine-tuning models or using specialized code generation AIs.
-*   **Dataset Curation:** The quality and breadth of the curated public datasets in MongoDB will significantly impact the value proposition. This requires an ongoing effort.
-*   **Boilerplate Variety:** Offering a diverse set of well-structured boilerplates for different application types and tech stacks will be important.
+    *   Rely on Google Cloud Identity Platform for secure user authentication.
+    *   Protect against common web vulnerabilities (XSS, CSRF, etc.).
+    *   Protect user data and PII (e.g., user vibes, saved preferences).
+*   **Scalability:** Design backend services (Vibe Analysis & Feedback, Resource Discovery) to be scalable. MongoDB Atlas and Cloud Run are inherently scalable. Authentication service must also be scalable.
+*   **AI Insight Quality:** The utility of VibeFlow will heavily depend on the quality, relevance, and actionability of the AI-generated feedback, resource suggestions, and learning pathways. This requires careful prompt engineering.
+*   **Resource Curation:** The quality, breadth, and up-to-dateness of the curated datasets, API information, and learning resources in MongoDB will significantly impact the value proposition. This requires an ongoing effort.
 
 ## Dependencies (High-Level)
 *   **VibeFlow Platform:**
     *   MongoDB Node.js/Python Driver
-    *   Google Cloud SDK/Client Libraries (for Cloud Build, Cloud Run, AI APIs)
-    *   GitHub API Client Library
-    *   Chosen frontend and backend frameworks
-*   **Generated Starter Kits:**
-    *   Dependencies specific to the chosen tech stack (e.g., React, Express, etc.)
-    *   MongoDB Driver
-    *   `gcloud` CLI (for deployment scripts, though Cloud Build handles this)
+    *   Google Cloud SDK/Client Libraries (for Cloud Run, Identity Platform, AI APIs)
+    *   Chosen frontend (React) and backend frameworks.
+    *   (No GitHub API client library needed for user repos in this model).

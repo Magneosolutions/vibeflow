@@ -1,19 +1,20 @@
 # Active Context: VibeFlow
 
 ## Current Work Focus
-*   **UI Styling Complete:** Core UI components (`LoginPage.tsx`, `SignUpPage.tsx`, `Layout.tsx`, `MainAppPage.tsx`) have been styled using Tailwind CSS. Brand colors in `tailwind.config.js` confirmed.
-*   **Frontend Foundation:** Vite + React + TypeScript project (`vibeflow-frontend`) is set up with basic routing, simulated authentication (`AuthContext.tsx`), and Tailwind CSS.
-*   **Version Control:** Initial project files pushed to GitHub, ignoring the `Google/` directory. The remote was updated to `https://github.com/Magneosolutions/vibeflow`. All recent changes, including UI updates and memory bank refreshes, have been committed and pushed.
-*   **Cloud Run CI/CD Configuration & Troubleshooting:** Configured `vibeflow-frontend` Dockerfile, Nginx, and an entrypoint script for CI/CD to Cloud Run. Successfully troubleshot deployment issues related to Nginx startup and public access permissions. The frontend is now publicly accessible via Cloud Run.
-*   **UI Update for `Layout.tsx` (Resolved):** The new vibrant UI design for `Layout.tsx`, including Tailwind CSS styles and animations, is now successfully deployed and visible on Cloud Run.
+*   **Strategic Shift to "Interactive Vibe Refinement & Learning Tool":** VibeFlow's core concept has been redefined. The focus is now on assisting users in refining their ideas, discovering resources (datasets, APIs), and accessing curated learning materials, rather than full app generation.
+*   **UI Update for `MainAppPage.tsx`:** Updated the main application page to reflect the new strategic direction with clear instructions and objectives for vibecoders.
+*   **Memory Bank Overhaul (In Progress):** `projectbrief.md`, `productContext.md`, `systemPatterns.md`, and `techContext.md` have been updated to align with the new "Interactive Vibe Refinement & Learning Tool" concept. `activeContext.md` (this file) and `progress.md` are currently being updated.
+*   **UI Styling Complete & Stable:** Core UI components are styled, and the `Layout.tsx` styling issue is resolved.
+*   **Frontend Foundation Stable:** Vite + React + TypeScript project (`vibeflow-frontend`) with routing and simulated auth is stable.
+*   **Version Control Up-to-Date (Locally):** All changes, including strategic shifts and UI updates, are documented and will be committed shortly.
+*   **Cloud Run Deployment Stable:** The frontend remains publicly accessible via Cloud Run.
 
 ## Recent Changes
-*   **Resolved UI Update for `Layout.tsx`:**
-    *   Updated `Layout.tsx` with new design and animations.
-    *   Moved animation definitions from `<style jsx>` to `tailwind.config.js`.
-    *   Resolved TS errors by reinstalling `node_modules` and restarting TS server.
-    *   **Resolution:** The new Tailwind CSS styles and animations are now correctly applying in the deployed Cloud Run environment.
-*   **Committed and Pushed All Changes:** All recent updates, including UI fixes and memory bank updates, were committed and pushed to `https://github.com/Magneosolutions/vibeflow`.
+*   **Updated Memory Bank (Strategic Shift):** Modified `projectbrief.md`, `productContext.md`, `systemPatterns.md`, and `techContext.md` to reflect the new product direction.
+*   **Updated `vibeflow-frontend/src/pages/MainAppPage.tsx`:** Added new introductory text explaining VibeFlow's role as an "Idea Co-Pilot" and its benefits for vibecoders.
+*   **Strategic Redirection Brainstorming:** Shifted VibeFlow's focus to Option 3: "The Interactive Vibe Refinement & Learning Tool."
+*   **Resolved UI Update for `Layout.tsx`:** New Tailwind styles and animations for `Layout.tsx` are correctly applying in Cloud Run.
+*   **Committed and Pushed Previous Changes:** UI fixes and prior memory bank updates (before strategic shift) were pushed to GitHub.
 *   **Successfully Deployed `vibeflow-frontend` to Cloud Run and Made Public:**
     *   Troubleshot Nginx exiting issue by enhancing `entrypoint.sh` with verbose logging and `nginx -t` config testing.
     *   Resolved "403 Forbidden" error by addressing IAM permissions.
@@ -30,36 +31,40 @@
 *   Styled `MainAppPage.tsx` with Tailwind CSS, focusing on the main input area.
 *   Confirmed current brand colors (`brand-primary`: Indigo, `brand-secondary`: Pink) in `tailwind.config.js` are acceptable.
 *   Created `.gitignore` at the project root to exclude `Google/` and other specified files/folders.
-*   Initialized Git repository and pushed all project files (excluding ignored ones) to `git@github.com:mgesteban/vibeflow.git` (old remote).
-*   Previously: Updated memory bank files, created Vite project, configured Tailwind, implemented simulated auth, styled login/signup pages.
+    *   Initialized Git repository and pushed all project files (excluding ignored ones) to `git@github.com:mgesteban/vibeflow.git` (old remote).
+*   Previously: Updated memory bank files (before strategic shift), created Vite project, configured Tailwind, implemented simulated auth, styled login/signup pages.
 
 ## Next Steps
-1.  **Finalize Memory Bank Updates:**
-    *   `progress.md` and `activeContext.md` updated to reflect UI fix.
-    *   `.clinerules` already reflects React & GCIP choices. Consider adding notes about Cloud Run Docker/Nginx patterns if not already sufficiently covered.
-2.  **Authentication Implementation (Real):**
-    *   Begin planning and implementing actual authentication with Google Cloud Identity Platform, replacing the simulated flow.
-    *   This involves frontend integration with GCIP SDK and potentially backend adjustments if required by GCIP.
-3.  **Begin Phase 1 (MVP) Core VibeFlow Functionality (after real authentication is stable):**
-    *   Detail the tasks for "Manually curate a small list (20-30) of high-quality public datasets and store them in MongoDB Atlas."
-        *   Identify sources for public datasets (e.g., `awesome-public-datasets` on GitHub).
-        *   Define the schema for storing dataset metadata in MongoDB.
-        *   Plan the process for cleaning, categorizing, and generating vector embeddings for these datasets.
-    *   Detail the tasks for "Build the core 'Vibe' input and use AI to generate vector embeddings."
-        *   Design the frontend UI for the "Vibe" input.
-        *   Select and plan integration with the AI model (e.g., Google Gemini) for text analysis and embedding generation.
-    *   Detail the tasks for "Implement Vector Search to match a vibe to a dataset."
-        *   Set up MongoDB Atlas with Vector Search capabilities.
-        *   Develop backend logic to take the AI-generated embedding and query MongoDB.
-    *   Detail the tasks for "Instead of generating code, just provide a link to a single, hard-coded boilerplate project on GitHub."
-        *   Identify or create a suitable generic boilerplate project.
-        *   Plan how to present this link to the user.
-    *   Focus on the "MongoDB Search -> Suggested Dataset flow."
+1.  **Finalize Memory Bank Updates for Strategic Shift:**
+    *   Update `activeContext.md` (this file - currently in progress).
+    *   Update `progress.md` (next) to reflect the new strategic direction, UI changes to `MainAppPage.tsx`, and revised MVP tasks.
+    *   Ensure `.clinerules` is consistent (Cloud Run patterns are okay, no new major patterns from this shift yet).
+2.  **Commit & Push All Strategic Changes:** Commit all UI and memory bank updates (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`, and `vibeflow-frontend/src/pages/MainAppPage.tsx`) to GitHub.
+3.  **Authentication Implementation (Real):**
+    *   Proceed with planning and implementing actual authentication with Google Cloud Identity Platform.
+4.  **Begin Phase 1 (MVP - Interactive Resource Discovery & Basic Feedback - Revised):**
+    *   **Curate Initial Resources:**
+        *   Manually curate a small list (20-30) of public datasets (metadata, sample data snippets) and store them in MongoDB Atlas with vector embeddings.
+        *   Manually curate a small list (10-15) of common APIs (descriptions, use cases) and store them in MongoDB Atlas with vector embeddings.
+    *   **Core "Vibe" Interaction (Backend):**
+        *   Integrate AI (e.g., Gemini) for text analysis (key concept extraction, vector embedding generation).
+    *   **Resource Matching & Display (Backend & Frontend):**
+        *   Implement MongoDB Atlas Vector Search to match a vibe to datasets and APIs.
+        *   Develop backend endpoints to serve these suggestions.
+        *   Develop frontend components to display suggested datasets and APIs.
+    *   **Basic AI "Vibe Check" (Backend & Frontend):**
+        *   Implement a simple AI-driven feedback mechanism.
+        *   Display this feedback on the frontend.
+    *   **Curated Learning Links (Static Initial Set - Frontend):**
+        *   Display a small, static set of general learning links.
+    *   **Focus:** Make the "Vibe Input -> AI Analysis -> MongoDB Search -> Display Suggested Datasets/APIs + Basic AI Feedback" loop functional.
 
 ## Active Decisions & Considerations
+*   **Core Product Direction: Interactive Vibe Refinement & Learning Tool** (Decision Made. Implemented in `MainAppPage.tsx` intro text. Updates to `projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md` are complete. `activeContext.md` and `progress.md` updates are in progress).
 *   **Frontend Framework: React** (Decision Made and Implemented)
-*   **Authentication Provider: Google Cloud Identity Platform** (Decision Made, next major implementation step)
+*   **Authentication Provider: Google Cloud Identity Platform** (Decision Made, next major implementation step after current Memory Bank updates and commit)
 *   **Backend Framework Choice:** Decision pending (Node.js/Express or Python/FastAPI).
 *   **AI Model Selection:** Decision pending (e.g., Google Gemini).
-*   **`AudioFlowDiagram.md`:** Current version is sufficient.
-*   **Prioritization:** Real authentication implementation is the next key step before tackling the core VibeFlow dataset/AI features from Phase 1 MVP.
+*   **`SystemDataFlowDiagram.md`:** Renamed from `AudioFlowDiagram.md`. The diagram in `systemPatterns.md` (which `SystemDataFlowDiagram.md` now mirrors) is the current source of truth for system flow.
+*   **Prioritization:** Complete Memory Bank updates for strategic shift (including diagram rename), then commit. Then, real authentication implementation, followed by the revised Phase 1 MVP tasks.
+>>>>>>> REPLACE
