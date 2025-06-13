@@ -30,9 +30,16 @@
         *   Granting `Cloud Run Invoker` role to `allUsers` for the `vibeflow` service.
     *   The `vibeflow-frontend` application is now live and publicly accessible via Cloud Run.
     *   All related changes pushed to GitHub.
-*   **Memory Bank:** All core files (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`, `AudioFlowDiagram.md`) and `.clinerules` are up-to-date with recent changes, including Cloud Run deployment patterns and troubleshooting.
+*   **UI Update Attempt for `Layout.tsx` (Ongoing Issue):**
+    *   New vibrant design for `Layout.tsx` and animation definitions in `tailwind.config.js` were implemented and pushed.
+    *   TypeScript errors related to `<style jsx>` were resolved by moving animations to Tailwind config and reinstalling dependencies.
+    *   Cloud Build and Cloud Run deployments are successful.
+    *   **Current State:** Deployed site shows JavaScript/TSX changes (e.g., debug text in `Layout.tsx`), but new Tailwind CSS styles and animations are not applying. The UI visually remains the old version.
+    *   Attempted Docker build cache busting (`ARG CACHEBUST=1`) did not resolve the styling issue.
+*   **Memory Bank:** All core files (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`, `AudioFlowDiagram.md`) and `.clinerules` are up-to-date with recent changes, including Cloud Run deployment patterns, troubleshooting, and the current UI styling issue.
 
 ### What's Left to Build (Phase 1 - MVP - High-Level)
+*   **Resolve UI Styling Deployment Issue:** Investigate why new Tailwind CSS styles for `Layout.tsx` are not applying in the Cloud Run deployment despite successful builds and JS/TSX updates being visible.
 *   **Real Authentication Implementation:** Integrate Google Cloud Identity Platform, replacing the simulated flow.
 *   **Dataset Curation & Storage:**
     *   Manually curate 20-30 public datasets.

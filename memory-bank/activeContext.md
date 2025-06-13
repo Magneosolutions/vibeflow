@@ -5,8 +5,15 @@
 *   **Frontend Foundation:** Vite + React + TypeScript project (`vibeflow-frontend`) is set up with basic routing, simulated authentication (`AuthContext.tsx`), and Tailwind CSS.
 *   **Version Control:** Initial project files pushed to GitHub, ignoring the `Google/` directory. The remote was updated to `https://github.com/Magneosolutions/vibeflow`.
 *   **Cloud Run CI/CD Configuration & Troubleshooting:** Configured `vibeflow-frontend` Dockerfile, Nginx, and an entrypoint script for CI/CD to Cloud Run. Successfully troubleshot deployment issues related to Nginx startup and public access permissions. The frontend is now publicly accessible via Cloud Run.
+*   **UI Update Attempt (Ongoing Issue):** Attempted to deploy a new vibrant UI design for `Layout.tsx`. While JS/TSX changes (verified by debug text) are deploying, the new Tailwind CSS styles and animations are not applying. The deployed UI still shows old styling. Cache busting in Dockerfile did not resolve this.
 
 ## Recent Changes
+*   **Attempted UI Update for `Layout.tsx`:**
+    *   Updated `Layout.tsx` with new design and animations.
+    *   Moved animation definitions from `<style jsx>` to `tailwind.config.js`.
+    *   Resolved TS errors by reinstalling `node_modules` and restarting TS server.
+    *   Added `ARG CACHEBUST=1` to `Dockerfile` to try and force a fresh CSS build.
+    *   **Result:** Deployed site shows debug text from `Layout.tsx` changes, but new Tailwind styles are not applied. Issue is ongoing.
 *   **Successfully Deployed `vibeflow-frontend` to Cloud Run and Made Public:**
     *   Troubleshot Nginx exiting issue by enhancing `entrypoint.sh` with verbose logging and `nginx -t` config testing.
     *   Resolved "403 Forbidden" error by addressing IAM permissions.
