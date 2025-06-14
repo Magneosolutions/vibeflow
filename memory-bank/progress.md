@@ -59,6 +59,9 @@
     *   `index.ts`: Integrated `vibeRoutes` and a global error handler.
 *   **Frontend-Backend Connection:**
     *   `MainAppPage.tsx`: "Flow" button now calls the `/api/process-vibe` backend endpoint and displays loading/results/errors.
+*   **UI Branding Update:**
+    *   Updated `index.html` favicon and title to use VibeFlow branding.
+    *   Added `VibeFlow.png` logo prominently to `LoginPage.tsx`, `SignUpPage.tsx`, and `MainAppPage.tsx`.
 
 ### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
 *   **Thoroughly Test Real Authentication:** (User confirmed auth works).
