@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 // Define a basic structure for the expected API response
 // Define a more specific structure for search result items
@@ -335,9 +336,9 @@ const MainAppPage: React.FC = () => {
                 </div>
               )}
               {apiResults.aiFeedback && (
-                 <div>
+                 <div className="prose prose-sm max-w-none"> {/* Added Tailwind Typography for basic styling */}
                     <h5 className="font-semibold">AI Feedback:</h5>
-                    <p className="whitespace-pre-wrap">{apiResults.aiFeedback}</p>
+                    <ReactMarkdown>{apiResults.aiFeedback}</ReactMarkdown>
                 </div>
               )}
             </div>

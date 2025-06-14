@@ -57,7 +57,7 @@ router.post('/process-vibe', asyncHandler(async (req: Request<{}, any, ProcessVi
         path: 'description_embedding', // Field containing the vector
         queryVector: vibeEmbedding,    // The embedding of the user's vibe text
         numCandidates: 100,            // Number of candidates to consider
-        limit: 5,                      // Number of top results to return
+        limit: 1,                      // Number of top results to return (Changed from 5 to 1)
       },
     },
     {
@@ -77,8 +77,18 @@ router.post('/process-vibe', asyncHandler(async (req: Request<{}, any, ProcessVi
   ]).toArray() as DatasetDocument[]; // Added type assertion
   console.log(`Found ${searchResults.length} datasets via vector search.`);
 
-  // 3. Get AI Feedback (Vibe Check) - Placeholder
-  const aiFeedback = await getAIFeedback(vibeText);
+  // 3. Get AI Feedback (Vibe Check)
+  // Pass the matched dataset (if any) to getAIFeedback
+  let matchedDatasetInfo: { name: string, description: string } | null = null;
+  if (searchResults.length > 0 && searchResults[0]) {
+    // Ensure description is a string, provide a fallback if not (though it should be)
+    const description = typeof searchResults[0].description === 'string' ? searchResults[0].description : 'No description available.';
+    matchedDatasetInfo = { 
+      name: searchResults[0].name, 
+      description: description
+    };
+  }
+  const aiFeedback = await getAIFeedback(vibeText, matchedDatasetInfo);
 
   // Use return
   return res.status(200).json({

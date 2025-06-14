@@ -28,10 +28,9 @@ const chatModel = genAI.getGenerativeModel({
     { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
   ],
   generationConfig: {
-    // Ensure the model can output JSON
-    responseMimeType: "application/json", 
-    // Adjust temperature for creativity vs. predictability. Lower for structured JSON.
-    temperature: 0.3 
+    // Adjust temperature for creativity vs. predictability.
+    // We will set responseMimeType per-call where needed.
+    temperature: 0.5 // A more general temperature
   }
 });
 
@@ -62,28 +61,80 @@ export const getTextEmbedding = async (text: string): Promise<number[] | null> =
   }
 };
 
-// Placeholder for future Vibe Check functionality
-export const getAIFeedback = async (vibe: string): Promise<string | null> => {
-  // TODO: Implement logic to get AI feedback/insights using a chat model
-  console.log(`getAIFeedback called with vibe: "${vibe.substring(0,50)}..." (Not yet implemented)`);
-  // Example (conceptual - would use chatModel.generateContent or similar with safetySettings)
-  // const generationConfig = {
-  //   temperature: 0.7,
-  //   topK: 1,
-  //   topP: 1,
-  //   maxOutputTokens: 2048,
-  // };
-  // const safetySettings = [ /* ... see below ... */ ];
-  // const chat = chatModel.startChat({
-  //   generationConfig,
-  //   safetySettings,
-  //   history: [],
-  // });
-  // const prompt = `Analyze the following application idea (vibe) and provide feedback on its feasibility, potential challenges, and suggest 2-3 relevant learning resources: "${vibe}"`;
-  // const result = await chat.sendMessage(prompt);
-  // const response = result.response;
-  // return response.text();
-  return "AI feedback functionality is not yet implemented.";
+interface MatchedDatasetInfo {
+  name: string;
+  description: string;
+}
+
+export const getAIFeedback = async (vibe: string, matchedDataset?: MatchedDatasetInfo | null): Promise<string | null> => {
+  const SCRIPT_NAME = 'getAIFeedback';
+  
+  let logMessage = `[${SCRIPT_NAME}] Generating AI feedback for vibe: "${vibe.substring(0, 100)}..."`;
+  if (matchedDataset) {
+    logMessage += ` with matched dataset: "${matchedDataset.name}"`;
+  }
+  console.log(logMessage);
+
+  if (!vibe || vibe.trim() === "") {
+    console.warn(`[${SCRIPT_NAME}] Input vibe is empty.`);
+    return "Please provide a description of your app idea to get feedback.";
+  }
+
+  let promptContext = `The user's application idea (vibe) is: "${vibe}"`;
+  if (matchedDataset) {
+    promptContext += `\n\nWe found a potentially relevant dataset for this idea:
+    Dataset Name: "${matchedDataset.name}"
+    Dataset Description: "${matchedDataset.description}"
+    
+    Please tailor your feedback considering how this dataset might relate to the user's vibe.`;
+  } else {
+    promptContext += `\n\nNo specific dataset was matched, so provide general feedback on the vibe.`;
+  }
+
+  const prompt = `
+    You are VibeFlow, an AI co-pilot helping users refine their application ideas.
+    A user has described their app idea (vibe), and we may have found a relevant dataset.
+    ${promptContext}
+
+    Please provide constructive and actionable feedback structured as follows:
+
+    **Vibe Check & Feasibility:**
+    *   Start with an encouraging opening statement about their vibe.
+    *   Briefly discuss its general feasibility. If a dataset was matched, comment on how it might be useful or relevant to their idea.
+    *   What aspects seem straightforward?
+
+    **Refine Your Vision (What If?):**
+    *   Suggest one thought-provoking "what if" question or a potential way the user could expand or refine their current vision. For example, "What if you also considered X?" or "Have you thought about how users might Y?"
+
+    **Potential Challenges:**
+    *   Identify 1-2 key technical or conceptual hurdles they should consider. If a dataset is matched, mention any challenges related to using or integrating it.
+
+    **Learn As You Go (Learning Suggestions):**
+    *   Based on their vibe (and the matched dataset, if any), suggest 2-3 general technical areas or topics that would be beneficial to learn more about (e.g., "User Authentication", "Frontend UI/UX Design", "Working with [type of data, e.g., 'geospatial data' if a map dataset was found]"). Do not suggest specific URLs or courses.
+
+    **Next Steps & Encouragement:**
+    *   End with a brief, encouraging closing statement, perhaps suggesting they explore the suggested resources or refine their vibe further.
+
+    Keep the entire feedback concise (aim for 200-300 words), actionable, and maintain a positive, supportive tone. Use markdown for light formatting like bolding for section headers.
+  `;
+
+  try {
+    // For this text-based feedback, we don't strictly need responseMimeType: "application/json".
+    // The model will default to a text response based on the prompt.
+    // We can use the existing chatModel instance.
+    const result = await chatModel.generateContent(prompt);
+    const response = result.response;
+    const feedbackText = response.text();
+    
+    console.log(`[${SCRIPT_NAME}] Successfully generated AI feedback.`);
+    return feedbackText;
+
+  } catch (error) {
+    console.error(`[${SCRIPT_NAME}] ERROR generating AI feedback:`, error);
+    // Log the prompt if there's an error, for debugging
+    // console.error(`[${SCRIPT_NAME}] Prompt sent to AI for feedback:`, prompt); 
+    return "Sorry, I encountered an issue while generating feedback. Please try again.";
+  }
 };
 
 interface SampleQuery {
@@ -138,7 +189,14 @@ export const generateSampleMongoQueries = async (
   `;
 
   try {
-    const result = await chatModel.generateContent(prompt);
+    // Explicitly request JSON output for this function
+    const result = await chatModel.generateContent({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: {
+        responseMimeType: "application/json",
+        temperature: 0.3 // Keep lower temp for structured JSON
+      }
+    });
     const response = result.response;
     const responseText = response.text();
     

@@ -37,8 +37,15 @@
     *   **Backend Routes:** Created `playgroundRoutes.ts` with endpoints for generating sample queries (`/generate-queries`) and executing them (`/execute-query`). Integrated into `index.ts`.
     *   **Frontend Logic:** `MainAppPage.tsx` updated to fetch sample queries when "Try in Playground" is clicked, display them as buttons, and then fetch and display results when a sample query button is clicked.
     *   Full flow tested and working.
+*   **Refined AI Feedback (Vibe Check):**
+    *   Updated `getAIFeedback` in `aiService.ts` with a more structured prompt to guide the AI in providing feedback on vision refinement and learning suggestions, tailored to the user's vibe and the single matched dataset.
+    *   Modified `vibeRoutes.ts` to limit search results to 1 and pass the matched dataset to `getAIFeedback`.
+    *   (Frontend already displays this feedback, potentially with markdown rendering).
 
 ## Recent Changes
+*   **Improved AI Feedback (Vibe Check) Logic:**
+    *   Modified `aiService.ts` to refine the prompt for `getAIFeedback`, aiming for more structured and targeted advice including "Refine Your Vision" and "Learn As You Go" points, contextualized by the single best-matched dataset.
+    *   Updated `vibeRoutes.ts` to fetch only the top 1 dataset and pass its details to the feedback generation service.
 *   **Implemented Full Dataset Playground Flow:**
     *   Enhanced `aiService.ts` to generate sample MongoDB queries via LLM.
     *   Added new backend routes (`playgroundRoutes.ts`) for query generation and execution.
@@ -91,24 +98,12 @@
     *   Generate and store embeddings for these APIs.
     *   Update/Create Atlas Vector Search indexes for APIs.
     *   Potentially add more diverse public datasets if desired.
-3.  **Implement Basic AI "Vibe Check" (Backend & Frontend):**
-    *   Enhance `aiService.ts` (e.g., `getAIFeedback` function) to use a chat model for generating feedback on the user's initial vibe.
-    *   Update `vibeRoutes.ts` to call this improved function.
-    *   Display this AI feedback more prominently on the frontend.
-4.  **Display Curated Learning Links (Static Initial Set - Frontend):**
-    *   Define schema for `apis` collection in MongoDB.
-    *   Manually curate a small list (5-10) of common APIs (metadata, sample data snippets, vector embeddings).
-    *   Generate and store embeddings for these APIs.
-    *   Update/Create Atlas Vector Search indexes for APIs.
-    *   Curate additional diverse public datasets if desired.
-4.  **Implement Basic AI "Vibe Check" (Backend & Frontend):**
-    *   Enhance `aiService.ts` to use a chat model for generating feedback.
-    *   Update `vibeRoutes.ts` to call this new function.
-    *   Display this feedback on the frontend.
-4.  **Display Curated Learning Links (Static Initial Set - Frontend):**
-    *   Add a section to the frontend to display a small, static set of general learning links.
+3.  **Display Curated Learning Links (Static Initial Set - Frontend):**
+    *   Add a section to the frontend to display a small, static set of general learning links (this is now distinct from the AI's learning *topic* suggestions).
 
 ## Active Decisions & Considerations
+*   **AI Feedback (Vibe Check):** Now provides more structured and focused feedback based on the user's vibe and the single top-matched dataset.
+>>>>>>> REPLACE
 *   **Backend Services (Initial & Vector Search):** `mongoService`, `aiService` (embedding), and `/api/process-vibe` route (with real vector search for datasets) are implemented and working.
 *   **Frontend Connected to Backend:** `MainAppPage.tsx` calls the API.
 *   **Backend Technology Stack:** Node.js with Express.js and TypeScript (Setup complete, initial services built).

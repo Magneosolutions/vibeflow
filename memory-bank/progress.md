@@ -80,50 +80,29 @@
     *   **Backend Routes:** New `playgroundRoutes.ts` created and integrated, providing endpoints to generate sample queries and execute them.
     *   **Frontend Logic:** `MainAppPage.tsx` fully updated to manage the playground flow: fetching sample queries, displaying them, allowing user selection, sending the chosen query for execution, and displaying the results.
     *   This entire interactive loop is tested and working.
+*   **Refined AI Feedback (Vibe Check):**
+    *   `aiService.ts` updated with a more structured prompt for `getAIFeedback` to include "Refine Your Vision" and "Learn As You Go" sections, tailored to the user's vibe and the single matched dataset.
+    *   `vibeRoutes.ts` updated to limit search results to 1 and pass the matched dataset details to `getAIFeedback`.
+    *   Frontend now displays this more focused and structured AI feedback.
+    *   (Frontend markdown rendering for AI feedback was initiated, `@tailwindcss/typography` installation was interrupted).
 
 ### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
 *   **Thoroughly Test Real Authentication:** (User confirmed auth works).
+*   **Complete Frontend Formatting for AI Feedback (Optional):**
+    *   Ensure `@tailwindcss/typography` is installed and configured in `tailwind.config.js`.
+    *   Verify AI feedback markdown (bolding, lists) renders correctly.
 *   **Continue Curating Other Resources (APIs, more Datasets):**
     *   Define schema for `apis` collection in MongoDB.
-    *   Manually curate 5-10 common APIs (metadata, sample data snippets, vector embeddings).
-    *   Generate embeddings and update/create search indexes for APIs.
-    *   Curate additional diverse public datasets if desired.
-*   **Core "Vibe" Interaction (Backend):**
-    *   **Frontend:** Connect "Try in Playground" button to fetch/display sample queries, and then execute a selected query and display its results.
-*   **Continue Curating Other Resources (APIs, more Datasets):**
-    *   Define schema for `apis` collection in MongoDB.
-    *   Manually curate 5-10 common APIs (metadata, sample data snippets, vector embeddings).
-    *   Generate embeddings and update/create search indexes for APIs.
-    *   Curate additional diverse public datasets if desired.
-*   **Core "Vibe" Interaction (Backend):**
-    *   Define schema for `apis` collection in MongoDB.
-    *   Manually curate 5-10 common APIs (metadata, sample data snippets, vector embeddings).
-    *   Generate embeddings and update/create search indexes for APIs.
-    *   Curate additional diverse public datasets if desired.
-*   **Core "Vibe" Interaction (Backend):**
-    *   **Frontend:** Display playground query results.
-*   **Continue Curating Other Resources (APIs, more Datasets):**
-    *   Define schema for `apis` collection in MongoDB.
-    *   Manually curate 5-10 common APIs (metadata, sample data snippets, vector embeddings).
-    *   Generate embeddings and update/create search indexes for APIs.
-    *   Curate additional diverse public datasets if desired.
-*   **Core "Vibe" Interaction (Backend):**
-    *   Integrate AI (e.g., Gemini) for text analysis (key concept extraction, vector embedding generation).
-*   **Resource Matching & Display (Backend & Frontend):**
-    *   Implement MongoDB Atlas Vector Search to match a vibe to datasets and APIs.
-    *   Develop backend endpoints to serve these suggestions.
-    *   Develop frontend components to display suggested datasets and APIs.
-*   **Basic AI "Vibe Check" (Backend & Frontend):**
-    *   Implement a simple AI-driven feedback mechanism (e.g., on scope, common considerations).
-    *   Display this feedback on the frontend.
-*   **Curated Learning Links (Static Initial Set - Frontend):**
-    *   Display a small, static set of general learning links relevant to app development.
-*   **Focus:** Make the "Vibe Input -> AI Analysis -> MongoDB Search -> Display Suggested Datasets/APIs + Basic AI Feedback" loop functional.
+    *   Manually curate a small list (e.g., 5-10) of common APIs with metadata, sample data snippets, and vector embeddings.
+    *   Generate embeddings for these APIs and update/create necessary Atlas Vector Search indexes.
+    *   Consider adding 1-2 more diverse public datasets if beneficial for the POC.
+*   **Display Curated Learning Links (Static Initial Set - Frontend):**
+    *   Add a dedicated section to the frontend to display a small, static set of general learning resource links (e.g., to React docs, MongoDB docs, general app design principles). This is distinct from the AI's contextual learning topic suggestions.
+*   **Review and Refine Overall UX/UI:**
+    *   Consider any minor UI tweaks for clarity or improved user flow based on current features.
 
 ### Known Issues & Blockers
-*   **Backend Tech Stack Decision:** Resolved (Node.js/Express with TypeScript).
-*   **AI Model Selection & Access:** Google Gemini selected. API key in `.env`. `aiService.ts` initializes client and `getTextEmbedding` is implemented. `getAIFeedback` is a placeholder.
-*   **`SystemDataFlowDiagram.md` Naming:** Resolved.
+*   **`@tailwindcss/typography` Installation:** Interrupted. Needs to be completed if rich markdown rendering for AI feedback is desired.
 
 ### Overall Project Health
-*   **Green:** Major milestone achieved! Real vector search for datasets is implemented and working end-to-end. The "Google Trends" dataset is embedded, indexed, and successfully retrieved via semantic search from the frontend. Authentication is working. Backend server is stable. Next steps involve expanding curated content and implementing AI feedback.
+*   **Green:** Core VibeFlow functionality (vibe input, vector search for datasets, AI-driven sample query playground, and focused AI feedback) is implemented and working. The application provides a solid end-to-end POC experience. Next steps are primarily around content expansion (more datasets/APIs), adding static learning links, and minor UI/UX refinements.
