@@ -49,45 +49,40 @@ router.post('/process-vibe', asyncHandler(async (req: Request<{}, any, ProcessVi
   let searchResults: DatasetDocument[] = [];
   const datasetsCollection = getCollection<DatasetDocument>('datasets');
   
-  // Actual vector search (commented out until index and data embedding are ready)
-  /*
+  // Actual vector search
   searchResults = await datasetsCollection.aggregate([
     {
       $vectorSearch: {
-        index: 'idx_dataset_description_embedding', // ** REPLACE with your Atlas Vector Search index name **
-        path: 'description_embedding',
-        queryVector: vibeEmbedding,
-        numCandidates: 100,
-        limit: 5,
+        index: 'vector_index_datasets_description', // Actual Atlas Vector Search index name
+        path: 'description_embedding', // Field containing the vector
+        queryVector: vibeEmbedding,    // The embedding of the user's vibe text
+        numCandidates: 100,            // Number of candidates to consider
+        limit: 5,                      // Number of top results to return
       },
     },
     {
-      $project: {
-        _id: 0, name: 1, description: 1, source_url: 1, categories: 1, keywords: 1,
-        sample_data_snippet: 1, potential_use_cases: 1, score: { $meta: 'vectorSearchScore' }
+      $project: { // Define which fields to return
+        _id: 0, // Exclude the _id field
+        name: 1,
+        description: 1,
+        source_url: 1,
+        category: 1, // Corrected from 'categories' to 'category'
+        keywords: 1,
+        sample_data_snippet: 1,
+        potential_use_cases: 1,
+        core_features: 1, // Added core_features to the projection
+        score: { $meta: 'vectorSearchScore' } // Include the search score
       }
     }
-  ]).toArray();
+  ]).toArray() as DatasetDocument[]; // Added type assertion
   console.log(`Found ${searchResults.length} datasets via vector search.`);
-  */
-
-  // TEMPORARY SIMULATION
-  if (vibeText.toLowerCase().includes("google trends")) {
-      const trendsDoc = await datasetsCollection.findOne({ name: "Google Trends - Daily Top Rising Terms (US)" });
-      if (trendsDoc) {
-          searchResults.push(trendsDoc as DatasetDocument);
-      }
-      console.log("Simulated search: Found Google Trends document manually.");
-  } else {
-      console.log("Simulated search: No specific manual match for this vibe.");
-  }
 
   // 3. Get AI Feedback (Vibe Check) - Placeholder
   const aiFeedback = await getAIFeedback(vibeText);
 
   // Use return
   return res.status(200).json({
-    message: searchResults.length > 0 ? 'Vibe processed.' : 'Vibe processed, but no direct matches found with current simulation.',
+    message: searchResults.length > 0 ? 'Vibe processed and matches found.' : 'Vibe processed, but no direct matches found.',
     vibeText,
     vibeEmbeddingDimensions: vibeEmbedding.length,
     searchResults,

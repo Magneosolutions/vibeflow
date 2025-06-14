@@ -1,11 +1,30 @@
 import React, { useState } from 'react';
 
 // Define a basic structure for the expected API response
+// Define a more specific structure for search result items
+// Define a more specific structure for search result items
+// Define a more specific structure for search result items
+interface SearchResultItem {
+  name: string;
+  description?: string;
+  source_url?: string;
+  sample_data_snippet?: any; // Can be an object or string
+  score?: number; 
+  category?: string[];
+  core_features?: string[]; // Needed for generating sample queries
+}
+
+// Interface for AI-generated sample queries
+interface SampleQuery {
+  description: string;
+  query: object;
+}
+
 interface ApiResult {
   message: string;
   vibeText: string;
   vibeEmbeddingDimensions?: number;
-  searchResults?: any[]; // Define more specifically based on DatasetDocument later
+  searchResults?: SearchResultItem[]; 
   aiFeedback?: string | null;
 }
 
@@ -15,6 +34,14 @@ const MainAppPage: React.FC = () => {
   const [apiResults, setApiResults] = useState<ApiResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // State for Playground
+  const [activePlaygroundItemName, setActivePlaygroundItemName] = useState<string | null>(null);
+  const [sampleQueries, setSampleQueries] = useState<SampleQuery[] | null>(null);
+  const [playgroundResults, setPlaygroundResults] = useState<any[] | null>(null);
+  const [isLoadingPlayground, setIsLoadingPlayground] = useState(false);
+  const [playgroundError, setPlaygroundError] = useState<string | null>(null);
+
+
   const handleFlowSubmit = async () => {
     if (!vibeText.trim()) {
       setError("Please describe your application idea first!");
@@ -23,6 +50,11 @@ const MainAppPage: React.FC = () => {
     setIsLoading(true);
     setError(null);
     setApiResults(null);
+    // Reset playground state on new main flow submit
+    setActivePlaygroundItemName(null);
+    setSampleQueries(null);
+    setPlaygroundResults(null);
+    setPlaygroundError(null);
 
     try {
       // Assuming backend runs on port 3001 as per .env
@@ -49,6 +81,71 @@ const MainAppPage: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  const handleTryInPlayground = async (item: SearchResultItem) => {
+    console.log(`Entering handleTryInPlayground for: ${item.name}`, item); // Log entry and the item
+    if (!item.description || !item.core_features) {
+      console.error("Playground pre-check failed: Missing description or core_features for item:", item);
+      setPlaygroundError("Selected item is missing description or core features for playground.");
+      return;
+    }
+    setActivePlaygroundItemName(item.name);
+    setSampleQueries(null);
+    setPlaygroundResults(null);
+    setPlaygroundError(null);
+    setIsLoadingPlayground(true);
+
+    try {
+      const response = await fetch('http://localhost:3001/api/playground/generate-queries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          ideaName: item.name, 
+          ideaDescription: item.description,
+          coreFeatures: item.core_features 
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || `Failed to generate sample queries (status ${response.status})`);
+      }
+      setSampleQueries(data as SampleQuery[]);
+    } catch (err: any) {
+      console.error("Playground generate queries error:", err);
+      setPlaygroundError(err.message || "Failed to fetch sample queries.");
+      setSampleQueries(null); // Clear previous queries on error
+    } finally {
+      setIsLoadingPlayground(false);
+    }
+  };
+
+  const handleExecuteSampleQuery = async (query: object) => {
+    console.log("Executing sample query:", query);
+    setPlaygroundResults(null); // Clear previous results
+    setPlaygroundError(null);
+    setIsLoadingPlayground(true); // Use the same loading state for now
+
+    try {
+      const response = await fetch('http://localhost:3001/api/playground/execute-query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || `Failed to execute sample query (status ${response.status})`);
+      }
+      setPlaygroundResults(data);
+      console.log("Playground query results:", data);
+    } catch (err: any) {
+      console.error("Playground execute query error:", err);
+      setPlaygroundError(err.message || "Failed to execute sample query.");
+      setPlaygroundResults(null);
+    } finally {
+      setIsLoadingPlayground(false);
+    }
+  };
+
 
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -109,10 +206,10 @@ const MainAppPage: React.FC = () => {
               placeholder={`e.g.,
 - I want to build an app that shows me what's trending daily in the US.
 - Help me find data on rapidly growing search queries for marketing.
-- I need a dataset of top rising Google search terms to understand public interest.
-- Show me data sources for SEO keyword research based on daily trends.
-- What public datasets are available for analyzing trending topics in different US regions?
-Or describe your unique app idea...`}
+- I'm thinking about a skill-sharing app for local communities.
+- What resources are there for an app that tracks personal reading goals?
+- I want to create a guide to sustainable restaurants in my city.
+- Or describe your unique app idea... what do you want to build?`}
               value={vibeText}
               onChange={(e) => setVibeText(e.target.value)}
               disabled={isLoading}
@@ -145,7 +242,7 @@ Or describe your unique app idea...`}
             </div>
           )}
           {apiResults && (
-            <div className="text-left p-4 bg-green-50 border border-green-300 rounded-md space-y-4">
+            <div className="relative z-1 text-left p-4 bg-green-50 border border-green-300 rounded-md space-y-4"> {/* Added relative and z-1 */}
               <h4 className="text-lg font-semibold text-green-800">VibeFlow Insights:</h4>
               <p><strong>Original Vibe:</strong> {apiResults.vibeText}</p>
               <p><strong>Message:</strong> {apiResults.message}</p>
@@ -154,11 +251,84 @@ Or describe your unique app idea...`}
               {apiResults.searchResults && apiResults.searchResults.length > 0 && (
                 <div>
                   <h5 className="font-semibold">Suggested Datasets:</h5>
-                  <ul className="list-disc list-inside pl-4">
-                    {apiResults.searchResults.map((item: any, index: number) => (
-                      <li key={index} className="mt-1 p-2 border rounded bg-white">
-                        <strong>{item.name}</strong>: {item.description?.substring(0, 150)}...
-                        {item.source_url && <a href={item.source_url} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline ml-2">Source</a>}
+                  <ul className="space-y-3">
+                    {apiResults.searchResults.map((item: SearchResultItem, index: number) => (
+                      <li key={index} className="mt-1 p-3 border border-gray-200 rounded-lg bg-white shadow-sm">
+                        <div className="flex justify-between items-center">
+                          <h6 className="font-bold text-gray-800">{item.name}</h6>
+                          <div className="relative z-10"> {/* Added relative and z-10 */}
+                            {item.source_url && <a href={item.source_url} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-primary hover:text-brand-secondary hover:underline mr-3">View Source</a>}
+                            {item.category && item.category.includes("Playground App Idea") && (
+                              <>
+                                {/* Log state values right before rendering the button */}
+                                {console.log(`Button render for ${item.name}: isLoadingPlayground=${isLoadingPlayground}, activePlaygroundItemName=${activePlaygroundItemName}, isDisabled=${isLoadingPlayground && activePlaygroundItemName === item.name}`)}
+                                <button
+                                  type="button" // Explicitly set type
+                                  onClick={() => handleTryInPlayground(item)}
+                                  disabled={isLoadingPlayground && activePlaygroundItemName === item.name}
+                                  className="text-sm bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md transition-colors disabled:opacity-50"
+                                >
+                                  {isLoadingPlayground && activePlaygroundItemName === item.name ? 'Loading Queries...' : 'Try in Playground'}
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">{item.description?.substring(0, 250)}...</p>
+                        {item.score && <p className="text-xs text-gray-500 mt-1">Relevance Score: {item.score.toFixed(4)}</p>}
+                        {item.sample_data_snippet && (
+                          <div className="mt-2">
+                            <h6 className="text-xs font-semibold text-gray-700">Sample Data:</h6>
+                            <pre className="mt-1 p-2 bg-gray-50 text-xs text-gray-700 rounded-md overflow-x-auto">
+                              {typeof item.sample_data_snippet === 'object' 
+                                ? JSON.stringify(item.sample_data_snippet, null, 2) 
+                                : String(item.sample_data_snippet)}
+                            </pre>
+                          </div>
+                        )}
+                        {/* Display Sample Queries and Playground Results for this item */}
+                        {activePlaygroundItemName === item.name && (
+                          <div className="mt-3 p-3 border-t border-gray-200">
+                            {isLoadingPlayground && <p className="text-sm text-blue-600">Loading sample queries...</p>}
+                            {playgroundError && <p className="text-sm text-red-600">Playground Error: {playgroundError}</p>}
+                            
+                            {sampleQueries && sampleQueries.length > 0 && !playgroundResults && (
+                              <div>
+                                <h6 className="text-sm font-semibold text-gray-700 mb-2">Suggested Queries:</h6>
+                                <div className="space-y-2">
+                                  {sampleQueries.map((sq, sqIndex) => (
+                                    <button
+                                      key={sqIndex}
+                                      onClick={() => handleExecuteSampleQuery(sq.query)}
+                                      disabled={isLoadingPlayground}
+                                      className="w-full text-left text-sm p-2 bg-indigo-100 hover:bg-indigo-200 rounded-md border border-indigo-300 disabled:opacity-70 transition-colors"
+                                    >
+                                      {sq.description}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            {playgroundResults && (
+                              <div className="mt-4">
+                                <h6 className="text-sm font-semibold text-gray-700 mb-2">Playground Results:</h6>
+                                {playgroundResults.length > 0 ? (
+                                  <ul className="space-y-1">
+                                    {playgroundResults.map((result: any, prIndex: number) => (
+                                      <li key={prIndex} className="text-xs p-2 bg-gray-100 rounded">
+                                        <strong>{result.name}</strong>
+                                        {result.description && `: ${result.description.substring(0,100)}...`}
+                                        {result.core_features && ` (Features: ${result.core_features.join(', ')})`}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                ) : (
+                                  <p className="text-xs text-gray-500">No results found for this sample query.</p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </li>
                     ))}
                   </ul>

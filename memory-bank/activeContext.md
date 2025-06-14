@@ -16,14 +16,51 @@
 *   **Dataset Curation (MongoDB):** First dataset inserted.
 *   **Strategic Shift & Documentation:** All Memory Bank documents are up-to-date.
 *   **UI & Frontend Foundation Stable.**
-*   **Version Control Up-to-Date (Locally):** All changes, including backend service/API implementation, are documented and will be committed shortly.
+*   **Version Control Up-to-Date (Locally):** All changes, including backend service/API implementation and vector search, are documented and will be committed shortly.
 *   **Cloud Run Deployment Stable (Frontend).**
+*   **Real Vector Search Implemented & Tested (Datasets):**
+    *   Script created and run to populate `description_embedding` for the "Google Trends" dataset.
+    *   Atlas Vector Search index `vector_index_datasets_description` created on `datasets.description_embedding`.
+    *   `vibeRoutes.ts` updated to use real `$vectorSearch` aggregation.
+    *   End-to-end flow tested successfully: vibe input -> embedding -> vector search -> results (including score and sample data snippet) displayed on frontend.
+*   **Frontend Enhanced to Display Score and Sample Data:**
+    *   `MainAppPage.tsx` updated to render the `score` and `sample_data_snippet` for matched datasets.
+*   **Curated "App Ideas & Features" Dataset for Playground:**
+    *   Defined and scripted the insertion of 3 sample "App Ideas & Features" documents into the `datasets` collection.
+    *   Each new document includes a generated `description_embedding`.
+    *   Confirmed these new app ideas are discoverable via vector search and display correctly on the frontend.
+*   **Frontend: Added "Try in Playground" Button UI:**
+    *   `MainAppPage.tsx` updated to display a "Try in Playground" button for datasets categorized as "Playground App Idea".
+    *   Corrected `vibeRoutes.ts` to ensure the `category` field is projected to the frontend.
+*   **Implemented Dataset Playground Functionality (End-to-End):**
+    *   **AI Service:** `aiService.ts` updated with `generateSampleMongoQueries` function using the chat model.
+    *   **Backend Routes:** Created `playgroundRoutes.ts` with endpoints for generating sample queries (`/generate-queries`) and executing them (`/execute-query`). Integrated into `index.ts`.
+    *   **Frontend Logic:** `MainAppPage.tsx` updated to fetch sample queries when "Try in Playground" is clicked, display them as buttons, and then fetch and display results when a sample query button is clicked.
+    *   Full flow tested and working.
 
 ## Recent Changes
+*   **Implemented Full Dataset Playground Flow:**
+    *   Enhanced `aiService.ts` to generate sample MongoDB queries via LLM.
+    *   Added new backend routes (`playgroundRoutes.ts`) for query generation and execution.
+    *   Updated `MainAppPage.tsx` to orchestrate the full playground interaction: fetching sample queries, allowing user selection, executing the chosen query, and displaying results.
+*   **Added "Try in Playground" Button UI to Frontend:**
+    *   Modified `MainAppPage.tsx` to conditionally render a "Try in Playground" button for specific datasets.
+    *   Fixed a bug in `vibeRoutes.ts` to correctly project the `category` field.
+*   **Added "App Ideas & Features" Sample Dataset:**
+    *   Created `populateAppIdeasDataset.ts` script to define, generate embeddings for, and insert 3 sample "App Ideas & Features" documents into MongoDB.
+    *   Successfully ran the script, making these new datasets available for vector search.
+*   **Enhanced Frontend for Dataset Results:**
+    *   Modified `MainAppPage.tsx` to display the vector search `score` and `sample_data_snippet` for each suggested dataset.
+*   **Implemented Real Vector Search for Datasets:**
+    *   Created `populateGoogleTrendsEmbedding.ts` script to generate and store embeddings in MongoDB.
+    *   Successfully ran the script to populate the "Google Trends" dataset's `description_embedding`.
+    *   Guided user to create the `vector_index_datasets_description` Atlas Vector Search index.
+    *   Updated `vibeRoutes.ts` to replace simulated search with actual `$vectorSearch` aggregation.
+    *   Tested and confirmed end-to-end vector search functionality.
 *   **Implemented Initial Backend Logic:**
     *   Developed `mongoService.ts` for DB connection.
     *   Developed `aiService.ts` for Gemini embedding.
-    *   Developed `vibeRoutes.ts` with `/api/process-vibe` endpoint.
+    *   Developed `vibeRoutes.ts` with `/api/process-vibe` endpoint (initially simulated, now real search).
     *   Updated `index.ts` to use routes and connect DB.
 *   **Connected Frontend to Backend:** Updated `MainAppPage.tsx` to call the new API endpoint.
 *   **UI Branding:** Updated favicon, title, and added VibeFlow logo to auth pages and main app page.
@@ -47,19 +84,37 @@
 *   **Configured `vibeflow-frontend` for Cloud Run CI/CD (initial setup).**
 
 ## Next Steps
-1.  **Commit & Push All Recent Changes:** Commit backend service/API implementation, frontend connection, and associated memory bank updates to GitHub.
-2.  **Backend - Implement Real Vector Search:**
-    *   Generate and store actual embedding for the "Google Trends" dataset in MongoDB (using `aiService.getTextEmbedding` and manual update or a script).
-    *   Create Atlas Vector Search index on `datasets.description_embedding`.
-    *   Implement the `$vectorSearch` aggregation in `vibeRoutes.ts`, replacing the simulation.
-3.  **Thoroughly Test End-to-End Flow:** From vibe input on frontend to (simulated then real) search results.
+1.  **Commit & Push All Recent Changes:** Commit all backend and frontend changes for vector search and the dataset playground, plus Memory Bank updates, to GitHub.
+2.  **Continue Curating Other Resources (APIs, more Datasets):**
+    *   Define schema for `apis` collection in MongoDB.
+    *   Manually curate a small list (5-10) of common APIs (metadata, sample data snippets, vector embeddings).
+    *   Generate and store embeddings for these APIs.
+    *   Update/Create Atlas Vector Search indexes for APIs.
+    *   Potentially add more diverse public datasets if desired.
+3.  **Implement Basic AI "Vibe Check" (Backend & Frontend):**
+    *   Enhance `aiService.ts` (e.g., `getAIFeedback` function) to use a chat model for generating feedback on the user's initial vibe.
+    *   Update `vibeRoutes.ts` to call this improved function.
+    *   Display this AI feedback more prominently on the frontend.
+4.  **Display Curated Learning Links (Static Initial Set - Frontend):**
+    *   Define schema for `apis` collection in MongoDB.
+    *   Manually curate a small list (5-10) of common APIs (metadata, sample data snippets, vector embeddings).
+    *   Generate and store embeddings for these APIs.
+    *   Update/Create Atlas Vector Search indexes for APIs.
+    *   Curate additional diverse public datasets if desired.
+4.  **Implement Basic AI "Vibe Check" (Backend & Frontend):**
+    *   Enhance `aiService.ts` to use a chat model for generating feedback.
+    *   Update `vibeRoutes.ts` to call this new function.
+    *   Display this feedback on the frontend.
+4.  **Display Curated Learning Links (Static Initial Set - Frontend):**
+    *   Add a section to the frontend to display a small, static set of general learning links.
 
 ## Active Decisions & Considerations
-*   **Backend Services (Initial):** `mongoService`, `aiService` (embedding), and `/api/process-vibe` route are implemented.
+*   **Backend Services (Initial & Vector Search):** `mongoService`, `aiService` (embedding), and `/api/process-vibe` route (with real vector search for datasets) are implemented and working.
 *   **Frontend Connected to Backend:** `MainAppPage.tsx` calls the API.
 *   **Backend Technology Stack:** Node.js with Express.js and TypeScript (Setup complete, initial services built).
 *   **Real Authentication Implemented & Working:** Firebase/GCIP is the live authentication system.
-*   **Initial Dataset Inserted:** One dataset is in MongoDB (still needs its `description_embedding` populated with a real vector).
+*   **Initial Dataset Inserted & Embedded:** "Google Trends" dataset is in MongoDB with its `description_embedding` populated.
+*   **Atlas Vector Search Index Created:** `vector_index_datasets_description` is active for the `datasets` collection.
 *   **Core Product Direction: Interactive Vibe Refinement & Learning Tool** (Decision Made. Fully rolled out).
 *   **Frontend Framework: React** (Decision Made and Implemented).
 *   **Authentication Provider: Google Cloud Identity Platform** (Implementation complete and working).

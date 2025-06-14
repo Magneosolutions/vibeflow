@@ -20,6 +20,10 @@ app.get('/', (req: Request, res: Response) => {
 import vibeRoutes from './routes/vibeRoutes';
 app.use('/api', vibeRoutes); // All routes in vibeRoutes will be prefixed with /api
 
+// Import and use playgroundRoutes
+import playgroundRoutes from './routes/playgroundRoutes';
+app.use('/api/playground', playgroundRoutes);
+
 // Global error handling middleware (should be defined after all other app.use() and routes calls)
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error("[Global Error Handler]:", err.stack);
