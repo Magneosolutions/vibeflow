@@ -94,9 +94,26 @@
     *   Updated `MainAppPage.tsx` to use `VITE_API_BASE_URL` for API calls.
     *   Created `vibeflow-frontend/.env` with placeholder for `VITE_API_BASE_URL`.
     *   User instructed on how to find local IP, update `.env`, and restart Vite with `--host` for mobile testing. (2025-06-15).
+*   **Backend Deployment Preparation (Dockerfile):**
+    *   Created `vibeflow-backend/Dockerfile` to containerize the backend application. (2025-06-15).
+    *   Verified that the backend's port configuration in `src/config/index.ts` correctly uses `process.env.PORT || '3001'`, suitable for Cloud Run. (2025-06-15).
 
 ### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
 *   **Thoroughly Test Real Authentication:** (User confirmed auth works).
+*   **Deploy Backend to Cloud Run:**
+    *   Build and push the `vibeflow-backend` Docker image to a container registry (GCR or Artifact Registry).
+    *   Deploy the image to a new Cloud Run service, configuring necessary environment variables (MongoDB URI, Gemini API Key).
+    *   Update the deployed frontend's `VITE_API_BASE_URL` environment variable to point to the new public backend URL.
+*   **Enable API Search in Backend:**
+    *   Modify `vibeRoutes.ts` to search the `apis` collection (once populated) in addition to `datasets`.
+    *   Update frontend to display suggested APIs.
+*   **Resolve `populateApiData.ts` TypeScript Error:**
+    *   User to investigate and fix the persistent TS2345 error in `vibeflow-backend/src/scripts/populateApiData.ts`.
+    *   Run the script to populate the `apis` collection in MongoDB.
+*   **Create Atlas Vector Search Index for APIs:**
+    *   Once APIs are populated, create a vector search index in MongoDB Atlas for the `apis.description_embedding` field.
+*   **Review and Refine Overall UX/UI:**
+    *   Consider any minor UI tweaks for clarity or improved user flow based on current features.
 *   **Continue Curating Other Resources (APIs, more Datasets):**
     *   Define schema for `apis` collection in MongoDB. (Completed 2025-06-14, documented in `systemPatterns.md`).
     *   Manually curate a small list (e.g., 5-10) of common APIs with metadata, sample data snippets, and vector embeddings.

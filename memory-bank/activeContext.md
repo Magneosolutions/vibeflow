@@ -94,9 +94,12 @@
     *   Updated `MainAppPage.tsx` to use `VITE_API_BASE_URL` environment variable for API calls.
     *   Created `vibeflow-frontend/.env` with a placeholder for `VITE_API_BASE_URL`.
     *   User needs to update `.env` with their local IP and restart Vite dev server with `--host` for mobile testing.
+*   **Backend Deployment Preparation:**
+    *   Created `vibeflow-backend/Dockerfile` for containerizing the backend application.
+    *   Verified backend `index.ts` and `config/index.ts` correctly use `process.env.PORT`.
 
 ## Next Steps
-1.  **Commit & Push All Recent Changes:** (Completed - No pending changes to commit as of 2025-06-14, working tree was clean).
+1.  **Commit & Push All Recent Changes:** (User indicated this was done, but last attempt showed "nothing to commit". Will re-evaluate after current changes).
 2.  **Address `@tailwindcss/typography` Installation:** (Completed - Installed, configured, and markdown rendering verified by user on 2025-06-14).
 3.  **Update `README.md`:** (Completed - Project description updated on 2025-06-14).
 4.  **Continue Curating Other Resources (APIs, more Datasets):**
