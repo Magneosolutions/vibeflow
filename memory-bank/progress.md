@@ -90,6 +90,10 @@
     *   Markdown rendering (bolding, lists) for AI feedback verified by user on 2025-06-14.
 *   **README.md Updated:** Project description in root `README.md` updated on 2025-06-14.
 *   **UI Tweak (Header Subtitle):** Updated "Vibe Coders Assistant" to "Vibecoder Assistant" in `Layout.tsx` (2025-06-14).
+*   **Mobile API Fetching Setup:**
+    *   Updated `MainAppPage.tsx` to use `VITE_API_BASE_URL` for API calls.
+    *   Created `vibeflow-frontend/.env` with placeholder for `VITE_API_BASE_URL`.
+    *   User instructed on how to find local IP, update `.env`, and restart Vite with `--host` for mobile testing. (2025-06-15).
 
 ### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
 *   **Thoroughly Test Real Authentication:** (User confirmed auth works).

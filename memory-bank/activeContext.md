@@ -90,6 +90,10 @@
 *   **Successfully Deployed `vibeflow-frontend` to Cloud Run and Made Public.**
 *   **Configured `vibeflow-frontend` for Cloud Run CI/CD (initial setup).**
 *   **UI Tweak:** Updated header subtitle from "Vibe Coders Assistant" to "Vibecoder Assistant" in `Layout.tsx`.
+*   **Mobile API Fetching:**
+    *   Updated `MainAppPage.tsx` to use `VITE_API_BASE_URL` environment variable for API calls.
+    *   Created `vibeflow-frontend/.env` with a placeholder for `VITE_API_BASE_URL`.
+    *   User needs to update `.env` with their local IP and restart Vite dev server with `--host` for mobile testing.
 
 ## Next Steps
 1.  **Commit & Push All Recent Changes:** (Completed - No pending changes to commit as of 2025-06-14, working tree was clean).

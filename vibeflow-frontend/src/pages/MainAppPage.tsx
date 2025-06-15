@@ -58,9 +58,8 @@ const MainAppPage: React.FC = () => {
     setPlaygroundError(null);
 
     try {
-      // Assuming backend runs on port 3001 as per .env
-      // For development, you might need to configure Vite proxy or ensure backend CORS allows frontend origin
-      const response = await fetch('http://localhost:3001/api/process-vibe', {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+      const response = await fetch(`${API_BASE_URL}/process-vibe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +96,8 @@ const MainAppPage: React.FC = () => {
     setIsLoadingPlayground(true);
 
     try {
-      const response = await fetch('http://localhost:3001/api/playground/generate-queries', {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+      const response = await fetch(`${API_BASE_URL}/playground/generate-queries`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -127,7 +127,8 @@ const MainAppPage: React.FC = () => {
     setIsLoadingPlayground(true); // Use the same loading state for now
 
     try {
-      const response = await fetch('http://localhost:3001/api/playground/execute-query', {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+      const response = await fetch(`${API_BASE_URL}/playground/execute-query`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query }),
