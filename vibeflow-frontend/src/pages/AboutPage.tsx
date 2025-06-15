@@ -15,7 +15,7 @@ const AboutPage: React.FC = () => {
         <div className="bg-white shadow-xl rounded-lg p-8 space-y-10"> {/* Increased space-y */}
           <div>
             <p className="text-lg leading-relaxed">
-              VibeFlow was proudly developed as an entry for the 
+              VibeFlow was proudly developed as an entry for the  
               <strong>MongoDB & Google Cloud AI in Action Challenge</strong>. 
               What makes VibeFlow particularly unique is its development journey: 
               it was built from the ground up with the dedicated assistance of 
@@ -80,7 +80,7 @@ const AboutPage: React.FC = () => {
                   className="w-40 h-40 rounded-full object-cover mx-auto shadow-lg mb-3" 
                 />
                 <h3 className="text-xl font-semibold text-gray-700">Duane Snider</h3>
-                <p className="text-md text-brand-primary">The Quintessential Geek<br />from San Francisco, California</p>
+                <p className="text-md text-brand-primary">The Quintessential Geek<br /></p>
               </div>
             </div>
           </div>
