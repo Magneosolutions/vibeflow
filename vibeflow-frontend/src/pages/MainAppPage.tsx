@@ -5,14 +5,25 @@ import ReactMarkdown from 'react-markdown';
 // Define a more specific structure for search result items
 // Define a more specific structure for search result items
 // Define a more specific structure for search result items
-interface SearchResultItem {
+interface SearchResultItem { // This will now be specifically for Datasets
   name: string;
   description?: string;
-  source_url?: string;
-  sample_data_snippet?: any; // Can be an object or string
+  source_url?: string; // Specific to datasets
+  sample_data_snippet?: any; 
   score?: number; 
   category?: string[];
-  core_features?: string[]; // Needed for generating sample queries
+  core_features?: string[]; 
+}
+
+// New interface for API results
+interface ApiItem {
+  name: string;
+  description?: string;
+  documentation_url: string; // Specific to APIs
+  category?: string; // Usually single for APIs in our current backend schema
+  common_use_cases?: string[];
+  authentication_type?: string;
+  score?: number;
 }
 
 // Interface for AI-generated sample queries
@@ -21,11 +32,12 @@ interface SampleQuery {
   query: object;
 }
 
-interface ApiResult {
+interface ApiResult { // This is the overall response from /process-vibe
   message: string;
   vibeText: string;
   vibeEmbeddingDimensions?: number;
-  searchResults?: SearchResultItem[]; 
+  searchResults?: SearchResultItem[]; // For datasets
+  apiResults?: ApiItem[]; // For APIs
   aiFeedback?: string | null;
 }
 
@@ -336,6 +348,42 @@ const MainAppPage: React.FC = () => {
                   </ul>
                 </div>
               )}
+
+              {/* Suggested APIs Section */}
+              {apiResults.apiResults && apiResults.apiResults.length > 0 && (
+                <div className="mt-6"> {/* Add some margin-top if both datasets and APIs are present */}
+                  <h5 className="font-semibold">Suggested APIs:</h5>
+                  <ul className="space-y-3">
+                    {apiResults.apiResults.map((api: ApiItem, index: number) => (
+                      <li key={`api-${index}`} className="mt-1 p-3 border border-gray-200 rounded-lg bg-white shadow-sm">
+                        <div className="flex justify-between items-center">
+                          <h6 className="font-bold text-gray-800">{api.name}</h6>
+                          {api.documentation_url && (
+                            <a 
+                              href={api.documentation_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="text-sm text-brand-primary hover:text-brand-secondary hover:underline"
+                            >
+                              View Docs
+                            </a>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">{api.description?.substring(0, 250)}...</p>
+                        {api.category && <p className="text-xs text-gray-500 mt-1">Category: {api.category}</p>}
+                        {api.authentication_type && <p className="text-xs text-gray-500 mt-1">Auth: {api.authentication_type}</p>}
+                        {api.common_use_cases && api.common_use_cases.length > 0 && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            Use Cases: {api.common_use_cases.join(', ').substring(0, 100)}...
+                          </p>
+                        )}
+                        {api.score && <p className="text-xs text-gray-500 mt-1">Relevance Score: {api.score.toFixed(4)}</p>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               {apiResults.aiFeedback && (
                  <div className="prose prose-sm max-w-none"> {/* Added Tailwind Typography for basic styling */}
                     <h5 className="font-semibold">AI Feedback:</h5>

@@ -13,12 +13,26 @@ interface DatasetDocument extends MongoDocument {
   name: string;
   description: string;
   description_embedding?: number[];
-  // Add other fields from your schema as needed for type safety
   source_url?: string;
-  categories?: string[];
+  category?: string[]; // Changed from categories
   keywords?: string[];
   sample_data_snippet?: any;
   potential_use_cases?: string[];
+  core_features?: string[]; // Added for playground
+}
+
+interface ApiDocument extends MongoDocument {
+  name: string;
+  description: string;
+  category: string;
+  documentation_url: string;
+  base_url?: string;
+  authentication_type?: string;
+  common_use_cases?: string[];
+  keywords?: string[];
+  sample_endpoint?: string;
+  sample_response_snippet?: string;
+  description_embedding?: number[];
 }
 
 // Async error handling middleware (optional, but good practice for Express async routes)
@@ -49,36 +63,66 @@ router.post('/process-vibe', asyncHandler(async (req: Request<{}, any, ProcessVi
   let searchResults: DatasetDocument[] = [];
   const datasetsCollection = getCollection<DatasetDocument>('datasets');
   
-  // Actual vector search
+  // Actual vector search for datasets
   searchResults = await datasetsCollection.aggregate([
     {
       $vectorSearch: {
-        index: 'vector_index_datasets_description', // Actual Atlas Vector Search index name
-        path: 'description_embedding', // Field containing the vector
-        queryVector: vibeEmbedding,    // The embedding of the user's vibe text
-        numCandidates: 100,            // Number of candidates to consider
-        limit: 1,                      // Number of top results to return (Changed from 5 to 1)
+        index: 'vector_index_datasets_description', 
+        path: 'description_embedding', 
+        queryVector: vibeEmbedding,    
+        numCandidates: 100,            
+        limit: 1, // Keep dataset results to 1 for focused AI feedback for now
       },
     },
     {
-      $project: { // Define which fields to return
-        _id: 0, // Exclude the _id field
+      $project: { 
+        _id: 0, 
         name: 1,
         description: 1,
         source_url: 1,
-        category: 1, // Corrected from 'categories' to 'category'
+        category: 1, 
         keywords: 1,
         sample_data_snippet: 1,
         potential_use_cases: 1,
-        core_features: 1, // Added core_features to the projection
-        score: { $meta: 'vectorSearchScore' } // Include the search score
+        core_features: 1, 
+        score: { $meta: 'vectorSearchScore' } 
       }
     }
-  ]).toArray() as DatasetDocument[]; // Added type assertion
+  ]).toArray() as DatasetDocument[]; 
   console.log(`Found ${searchResults.length} datasets via vector search.`);
 
-  // 3. Get AI Feedback (Vibe Check)
-  // Pass the matched dataset (if any) to getAIFeedback
+  // 3. Perform Vector Search for APIs
+  let apiResults: ApiDocument[] = [];
+  const apisCollection = getCollection<ApiDocument>('apis');
+  apiResults = await apisCollection.aggregate([
+    {
+      $vectorSearch: {
+        index: 'vector_index_apis_description', // Ensure this is your API vector index name
+        path: 'description_embedding',    // Field containing the vector in 'apis' collection
+        queryVector: vibeEmbedding,
+        numCandidates: 50,               // Can be different from datasets
+        limit: 3,                        // Return top 3 API matches
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        name: 1,
+        description: 1,
+        category: 1,
+        documentation_url: 1,
+        base_url: 1,
+        authentication_type: 1,
+        common_use_cases: 1,
+        keywords: 1,
+        score: { $meta: 'vectorSearchScore' }
+      }
+    }
+  ]).toArray() as ApiDocument[];
+  console.log(`Found ${apiResults.length} APIs via vector search.`);
+
+  // 4. Get AI Feedback (Vibe Check)
+  // Pass the matched dataset (if any) to getAIFeedback. API results are not used for feedback yet.
   let matchedDatasetInfo: { name: string, description: string } | null = null;
   if (searchResults.length > 0 && searchResults[0]) {
     // Ensure description is a string, provide a fallback if not (though it should be)
@@ -91,11 +135,24 @@ router.post('/process-vibe', asyncHandler(async (req: Request<{}, any, ProcessVi
   const aiFeedback = await getAIFeedback(vibeText, matchedDatasetInfo);
 
   // Use return
+  const messageBase = "Vibe processed.";
+  let messageDetail = "";
+  if (searchResults.length > 0 && apiResults.length > 0) {
+    messageDetail = "Dataset and API matches found.";
+  } else if (searchResults.length > 0) {
+    messageDetail = "Dataset matches found, no direct API matches.";
+  } else if (apiResults.length > 0) {
+    messageDetail = "API matches found, no direct dataset matches.";
+  } else {
+    messageDetail = "No direct dataset or API matches found.";
+  }
+
   return res.status(200).json({
-    message: searchResults.length > 0 ? 'Vibe processed and matches found.' : 'Vibe processed, but no direct matches found.',
+    message: `${messageBase} ${messageDetail}`,
     vibeText,
     vibeEmbeddingDimensions: vibeEmbedding.length,
     searchResults,
+    apiResults, // Add apiResults to the response
     aiFeedback,
   });
   // No 'catch' block needed here if using asyncHandler, as it passes errors to Express's error handlers
