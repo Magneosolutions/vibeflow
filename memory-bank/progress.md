@@ -89,6 +89,7 @@
     *   `@tailwindcss/typography` plugin installed and configured in `tailwind.config.js`.
     *   Markdown rendering (bolding, lists) for AI feedback verified by user on 2025-06-14.
 *   **README.md Updated:** Project description in root `README.md` updated on 2025-06-14.
+*   **UI Tweak (Header Subtitle):** Updated "Vibe Coders Assistant" to "Vibecoder Assistant" in `Layout.tsx` (2025-06-14).
 
 ### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
 *   **Thoroughly Test Real Authentication:** (User confirmed auth works).

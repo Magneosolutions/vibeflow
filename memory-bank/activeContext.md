@@ -89,6 +89,7 @@
 *   **Committed and Pushed Previous Changes:** UI fixes, strategic shift memory bank updates, and prior changes were pushed to GitHub.
 *   **Successfully Deployed `vibeflow-frontend` to Cloud Run and Made Public.**
 *   **Configured `vibeflow-frontend` for Cloud Run CI/CD (initial setup).**
+*   **UI Tweak:** Updated header subtitle from "Vibe Coders Assistant" to "Vibecoder Assistant" in `Layout.tsx`.
 
 ## Next Steps
 1.  **Commit & Push All Recent Changes:** (Completed - No pending changes to commit as of 2025-06-14, working tree was clean).
