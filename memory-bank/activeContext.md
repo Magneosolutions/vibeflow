@@ -97,12 +97,16 @@
 *   **Backend Deployment Preparation:**
     *   Created `vibeflow-backend/Dockerfile` for containerizing the backend application.
     *   Verified backend `index.ts` and `config/index.ts` correctly use `process.env.PORT`.
+*   **Awaiting User Action for Backend Deployment:** User is currently building, pushing, and deploying the backend to Cloud Run.
 
 ## Next Steps
-1.  **Commit & Push All Recent Changes:** (User indicated this was done, but last attempt showed "nothing to commit". Will re-evaluate after current changes).
-2.  **Address `@tailwindcss/typography` Installation:** (Completed - Installed, configured, and markdown rendering verified by user on 2025-06-14).
-3.  **Update `README.md`:** (Completed - Project description updated on 2025-06-14).
-4.  **Continue Curating Other Resources (APIs, more Datasets):**
+1.  **User Action: Build and Push `vibeflow-backend` Docker Image:** User to build the Docker image and push it to Google Container Registry or Artifact Registry.
+2.  **User Action: Deploy Backend to Cloud Run:** User to deploy the image to a new Cloud Run service, configuring:
+    *   Environment variables: `MONGODB_URI_VIBEFLOW`, `GEMINI_API_KEY`.
+    *   Allow unauthenticated invocations.
+3.  **User Action: Provide Public Backend URL:** User to share the public URL of the newly deployed backend service with Cline.
+4.  **Cline Action: Update Deployed Frontend Configuration:** Once the backend URL is provided, Cline will guide the update of the `VITE_API_BASE_URL` environment variable in the *deployed frontend's* Cloud Run service.
+5.  **Continue Curating Other Resources (APIs, more Datasets):**
     *   Define schema for `apis` collection in MongoDB. (Completed 2025-06-14, documented in `systemPatterns.md`).
     *   Manually curate a small list (5-10) of common APIs (metadata, sample data snippets, vector embeddings).
         *   Created `vibeflow-backend/src/scripts/populateApiData.ts` with 2 initial APIs (Google Maps JS, Public APIs GitHub).
@@ -111,10 +115,11 @@
     *   Generate and store embeddings for these APIs. (Blocked by script execution issue).
     *   Update/Create Atlas Vector Search indexes for APIs. (Blocked by script execution issue).
     *   Potentially add more diverse public datasets if desired.
-5.  **Display Curated Learning Links (Static Initial Set - Frontend):**
+6.  **Display Curated Learning Links (Static Initial Set - Frontend):**
     *   Add a section to the frontend to display a small, static set of general learning links (this is now distinct from the AI's learning *topic* suggestions). (Completed 2025-06-14 - Added section to `MainAppPage.tsx`).
 
 ## Active Decisions & Considerations
+*   **Backend Deployment:** User is responsible for deploying the backend to Cloud Run and providing the public URL. Cline will then assist in updating the frontend configuration.
 *   **AI Feedback (Vibe Check):** Now provides more structured and focused feedback based on the user's vibe and the single top-matched dataset. (`@tailwindcss/typography` installed, and rendering verified by user).
 *   **Backend Services (Initial & Vector Search):** `mongoService`, `aiService` (embedding), and `/api/process-vibe` route (with real vector search for datasets) are implemented and working.
 *   **Frontend Connected to Backend:** `MainAppPage.tsx` calls the API.

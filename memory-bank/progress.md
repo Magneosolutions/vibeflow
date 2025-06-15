@@ -97,13 +97,15 @@
 *   **Backend Deployment Preparation (Dockerfile):**
     *   Created `vibeflow-backend/Dockerfile` to containerize the backend application. (2025-06-15).
     *   Verified that the backend's port configuration in `src/config/index.ts` correctly uses `process.env.PORT || '3001'`, suitable for Cloud Run. (2025-06-15).
+*   **Backend Ready for User Deployment:** The `vibeflow-backend` is fully prepared for the user to build, push to a container registry, and deploy to Google Cloud Run.
 
 ### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
-*   **Thoroughly Test Real Authentication:** (User confirmed auth works).
-*   **Deploy Backend to Cloud Run:**
-    *   Build and push the `vibeflow-backend` Docker image to a container registry (GCR or Artifact Registry).
-    *   Deploy the image to a new Cloud Run service, configuring necessary environment variables (MongoDB URI, Gemini API Key).
-    *   Update the deployed frontend's `VITE_API_BASE_URL` environment variable to point to the new public backend URL.
+*   **User Action: Build and Push `vibeflow-backend` Docker Image:** User to build the Docker image and push it to Google Container Registry or Artifact Registry.
+*   **User Action: Deploy Backend to Cloud Run:** User to deploy the image to a new Cloud Run service, configuring:
+    *   Environment variables: `MONGODB_URI_VIBEFLOW`, `GEMINI_API_KEY`.
+    *   Allow unauthenticated invocations.
+*   **User Action: Provide Public Backend URL:** User to share the public URL of the newly deployed backend service with Cline.
+*   **Cline Action: Update Deployed Frontend Configuration:** Once the backend URL is provided, Cline will guide the update of the `VITE_API_BASE_URL` environment variable in the *deployed frontend's* Cloud Run service.
 *   **Enable API Search in Backend:**
     *   Modify `vibeRoutes.ts` to search the `apis` collection (once populated) in addition to `datasets`.
     *   Update frontend to display suggested APIs.
@@ -112,8 +114,6 @@
     *   Run the script to populate the `apis` collection in MongoDB.
 *   **Create Atlas Vector Search Index for APIs:**
     *   Once APIs are populated, create a vector search index in MongoDB Atlas for the `apis.description_embedding` field.
-*   **Review and Refine Overall UX/UI:**
-    *   Consider any minor UI tweaks for clarity or improved user flow based on current features.
 *   **Continue Curating Other Resources (APIs, more Datasets):**
     *   Define schema for `apis` collection in MongoDB. (Completed 2025-06-14, documented in `systemPatterns.md`).
     *   Manually curate a small list (e.g., 5-10) of common APIs with metadata, sample data snippets, and vector embeddings.
@@ -128,7 +128,7 @@
     *   Consider any minor UI tweaks for clarity or improved user flow based on current features.
 
 ### Known Issues & Blockers
-*   None currently identified.
+*   **TypeScript Error in `populateApiData.ts`:** Persistent TS2345 error blocks populating the `apis` collection.
 
 ### Overall Project Health
-*   **Green:** Core VibeFlow functionality (vibe input, vector search for datasets, AI-driven sample query playground, and focused AI feedback) is implemented and working. `@tailwindcss/typography` is installed, configured, and markdown rendering is verified. The `README.md` is updated. The application provides a solid end-to-end POC experience. Next steps are primarily around content expansion (more datasets/APIs), adding static learning links, and minor UI/UX refinements.
+*   **Green:** Core VibeFlow functionality is implemented. The backend is prepared for deployment by the user. Once the backend is deployed and its URL is provided, the frontend configuration can be updated to complete the end-to-end setup. The main remaining tasks involve resolving the API data population script error and expanding curated content.

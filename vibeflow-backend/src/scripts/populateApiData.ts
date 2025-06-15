@@ -1,10 +1,8 @@
 import { MongoClient } from 'mongodb';
-import dotenv from 'dotenv';
-import { getTextEmbedding } from '../services/aiService'; // Assuming aiService is in the parent directory
+import { config } from '../config';
+import { getTextEmbedding } from '../services/aiService';
 
-dotenv.config({ path: '../../.env' }); // Adjust path to .env if necessary
-
-const MONGODB_URI = process.env.MONGODB_URI_VIBEFLOW;
+const MONGODB_URI = config.mongoURI;
 const DB_NAME = 'vibeflow_db';
 const COLLECTION_NAME = 'apis';
 
@@ -37,9 +35,12 @@ interface ApiSeedData {
   sample_response_snippet?: string;
 }
 
-if (!MONGODB_URI) {
-  throw new Error('MONGODB_URI_VIBEFLOW is not defined in the .env file');
+// Type guard to ensure a value is a non-empty string
+function isNonEmptyString(value: any): value is string {
+  return typeof value === 'string' && value.trim() !== '';
 }
+
+// MongoDB URI validation is already handled in config/index.ts
 
 const apisToInsert: ApiSeedData[] = [
   {
@@ -71,7 +72,7 @@ const apisToInsert: ApiSeedData[] = [
 ];
 
 async function populateApis() {
-  const client = new MongoClient(MONGODB_URI);
+  const client = new MongoClient(MONGODB_URI!);
 
   try {
     await client.connect();
@@ -89,17 +90,16 @@ async function populateApis() {
     for (const api of apisToInsert) {
       // The 'api' object conforms to ApiSeedData, where 'description' is a required string.
       // This runtime check is primarily for empty strings.
-      if (!api.description || api.description.trim() === '') {
-        console.error(`Description for API ${api.name} is missing or empty. Skipping embedding generation.`);
+      // Use the type guard here
+      if (!isNonEmptyString(api.description)) {
+        console.error(`Description for API ${api.name} is missing, empty, or not a string. Skipping embedding generation.`);
         continue; // Skip this API if description is invalid
       }
       
-      // At this point, api.description is guaranteed by the check above and the ApiSeedData interface
-      // to be a non-empty string.
-      const descriptionToEmbed = api.description; // Assign to a new variable
-
+      // At this point, api.description is guaranteed by the type guard to be a non-empty string.
+      // TypeScript should now correctly infer its type.
       console.log(`Generating embedding for: ${api.name}`);
-      const embedding = await getTextEmbedding(descriptionToEmbed); 
+      const embedding = await getTextEmbedding(api.description); 
       
       if (embedding) {
         operations.push({
