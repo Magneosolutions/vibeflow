@@ -14,6 +14,31 @@ vibeflow-frontend/dist/
 # Ignore .env files
 .env
 vibeflow-frontend/.env
+vibeflow-backend/.env # Ensure backend .env is also ignored at root if not already in its own .gitignore
 
-# Ignore specific files
-CLAUDE.md
+# Ignore sensitive files and common patterns for secrets
+# General patterns for API keys, tokens, passwords, service account files, etc.
+*.key
+*.pem
+*.secret
+*.credential*
+*token*
+*password*
+*private*key*
+*service_account*.json
+*serviceAccountKey*.json
+*credentials*.json
+*config*.json # Be cautious with this if non-sensitive config files are named this way
+secrets.*
+*.log # Often contain sensitive info
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE/editor specific files (beyond .vscode)
+.idea/
+*.swp
+*~
+*.sublime-project
+*.sublime-workspace
