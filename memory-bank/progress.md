@@ -85,24 +85,28 @@
     *   `vibeRoutes.ts` updated to limit search results to 1 and pass the matched dataset details to `getAIFeedback`.
     *   Frontend now displays this more focused and structured AI feedback.
     *   (Frontend markdown rendering for AI feedback was initiated, `@tailwindcss/typography` installation was interrupted).
+*   **Frontend Formatting for AI Feedback:**
+    *   `@tailwindcss/typography` plugin installed and configured in `tailwind.config.js`.
+    *   Markdown rendering (bolding, lists) for AI feedback verified by user on 2025-06-14.
+*   **README.md Updated:** Project description in root `README.md` updated on 2025-06-14.
 
 ### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
 *   **Thoroughly Test Real Authentication:** (User confirmed auth works).
-*   **Complete Frontend Formatting for AI Feedback (Optional):**
-    *   Ensure `@tailwindcss/typography` is installed and configured in `tailwind.config.js`.
-    *   Verify AI feedback markdown (bolding, lists) renders correctly.
 *   **Continue Curating Other Resources (APIs, more Datasets):**
-    *   Define schema for `apis` collection in MongoDB.
+    *   Define schema for `apis` collection in MongoDB. (Completed 2025-06-14, documented in `systemPatterns.md`).
     *   Manually curate a small list (e.g., 5-10) of common APIs with metadata, sample data snippets, and vector embeddings.
+        *   Created `vibeflow-backend/src/scripts/populateApiData.ts` with 2 initial APIs.
+        *   Added `populate:apis` script to `vibeflow-backend/package.json`.
     *   Generate embeddings for these APIs and update/create necessary Atlas Vector Search indexes.
+        *   **Issue:** Execution of `populateApiData.ts` script is blocked by a persistent TypeScript error (TS2345) related to type inference for `api.description`. User to investigate TS/ts-node environment or run script with type error ignored.
     *   Consider adding 1-2 more diverse public datasets if beneficial for the POC.
 *   **Display Curated Learning Links (Static Initial Set - Frontend):**
-    *   Add a dedicated section to the frontend to display a small, static set of general learning resource links (e.g., to React docs, MongoDB docs, general app design principles). This is distinct from the AI's contextual learning topic suggestions.
+    *   Added a dedicated section to `MainAppPage.tsx` to display a static set of general learning resource links (React, MongoDB Atlas, Tailwind CSS, Node.js). (Completed 2025-06-14).
 *   **Review and Refine Overall UX/UI:**
     *   Consider any minor UI tweaks for clarity or improved user flow based on current features.
 
 ### Known Issues & Blockers
-*   **`@tailwindcss/typography` Installation:** Interrupted. Needs to be completed if rich markdown rendering for AI feedback is desired.
+*   None currently identified.
 
 ### Overall Project Health
-*   **Green:** Core VibeFlow functionality (vibe input, vector search for datasets, AI-driven sample query playground, and focused AI feedback) is implemented and working. The application provides a solid end-to-end POC experience. Next steps are primarily around content expansion (more datasets/APIs), adding static learning links, and minor UI/UX refinements.
+*   **Green:** Core VibeFlow functionality (vibe input, vector search for datasets, AI-driven sample query playground, and focused AI feedback) is implemented and working. `@tailwindcss/typography` is installed, configured, and markdown rendering is verified. The `README.md` is updated. The application provides a solid end-to-end POC experience. Next steps are primarily around content expansion (more datasets/APIs), adding static learning links, and minor UI/UX refinements.

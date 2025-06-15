@@ -8,6 +8,7 @@
     "dev": "nodemon src/index.ts",
     "populate-embedding:google-trends": "ts-node src/scripts/populateGoogleTrendsEmbedding.ts",
     "populate-dataset:app-ideas": "ts-node src/scripts/populateAppIdeasDataset.ts",
+    "populate:apis": "ts-node src/scripts/populateApiData.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

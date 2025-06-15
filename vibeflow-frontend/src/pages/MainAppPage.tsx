@@ -344,6 +344,31 @@ const MainAppPage: React.FC = () => {
             </div>
           )}
         </div>
+
+        {/* Curated Learning Links Section */}
+        <div className="mt-12 w-full max-w-2xl">
+          <h3 className="text-xl font-semibold text-gray-800 text-center mb-4">
+            Curated Learning Resources
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <a href="https://react.dev/" target="_blank" rel="noopener noreferrer" className="block p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <h4 className="font-bold text-brand-primary">React Docs</h4>
+              <p className="text-sm text-gray-600 mt-1">The official documentation for React, the library for web and native user interfaces.</p>
+            </a>
+            <a href="https://www.mongodb.com/docs/atlas/" target="_blank" rel="noopener noreferrer" className="block p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <h4 className="font-bold text-brand-primary">MongoDB Atlas Docs</h4>
+              <p className="text-sm text-gray-600 mt-1">Official documentation for MongoDB Atlas, the multi-cloud application data platform.</p>
+            </a>
+            <a href="https://tailwindcss.com/docs" target="_blank" rel="noopener noreferrer" className="block p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <h4 className="font-bold text-brand-primary">Tailwind CSS Docs</h4>
+              <p className="text-sm text-gray-600 mt-1">Documentation for Tailwind CSS, a utility-first CSS framework.</p>
+            </a>
+            <a href="https://nodejs.org/en/docs" target="_blank" rel="noopener noreferrer" className="block p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <h4 className="font-bold text-brand-primary">Node.js Docs</h4>
+              <p className="text-sm text-gray-600 mt-1">Official Node.js documentation, covering its asynchronous event-driven JavaScript runtime.</p>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );

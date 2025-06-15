@@ -24,6 +24,7 @@ export default {
     },
   },
   plugins: [
+    require('@tailwindcss/typography'),
     function ({ addUtilities }) {
       addUtilities({
         '.animation-delay-2000': {

@@ -91,19 +91,23 @@
 *   **Configured `vibeflow-frontend` for Cloud Run CI/CD (initial setup).**
 
 ## Next Steps
-1.  **Commit & Push All Recent Changes:** Commit all backend and frontend changes for vector search and the dataset playground, plus Memory Bank updates, to GitHub.
-2.  **Continue Curating Other Resources (APIs, more Datasets):**
-    *   Define schema for `apis` collection in MongoDB.
+1.  **Commit & Push All Recent Changes:** (Completed - No pending changes to commit as of 2025-06-14, working tree was clean).
+2.  **Address `@tailwindcss/typography` Installation:** (Completed - Installed, configured, and markdown rendering verified by user on 2025-06-14).
+3.  **Update `README.md`:** (Completed - Project description updated on 2025-06-14).
+4.  **Continue Curating Other Resources (APIs, more Datasets):**
+    *   Define schema for `apis` collection in MongoDB. (Completed 2025-06-14, documented in `systemPatterns.md`).
     *   Manually curate a small list (5-10) of common APIs (metadata, sample data snippets, vector embeddings).
-    *   Generate and store embeddings for these APIs.
-    *   Update/Create Atlas Vector Search indexes for APIs.
+        *   Created `vibeflow-backend/src/scripts/populateApiData.ts` with 2 initial APIs (Google Maps JS, Public APIs GitHub).
+        *   Added `populate:apis` script to `vibeflow-backend/package.json`.
+        *   **Issue:** Script execution fails due to a persistent TypeScript error (TS2345) related to `api.description` type inference, despite explicit typing. User to investigate TS/ts-node environment or run with type error ignored.
+    *   Generate and store embeddings for these APIs. (Blocked by script execution issue).
+    *   Update/Create Atlas Vector Search indexes for APIs. (Blocked by script execution issue).
     *   Potentially add more diverse public datasets if desired.
-3.  **Display Curated Learning Links (Static Initial Set - Frontend):**
-    *   Add a section to the frontend to display a small, static set of general learning links (this is now distinct from the AI's learning *topic* suggestions).
+5.  **Display Curated Learning Links (Static Initial Set - Frontend):**
+    *   Add a section to the frontend to display a small, static set of general learning links (this is now distinct from the AI's learning *topic* suggestions). (Completed 2025-06-14 - Added section to `MainAppPage.tsx`).
 
 ## Active Decisions & Considerations
-*   **AI Feedback (Vibe Check):** Now provides more structured and focused feedback based on the user's vibe and the single top-matched dataset.
->>>>>>> REPLACE
+*   **AI Feedback (Vibe Check):** Now provides more structured and focused feedback based on the user's vibe and the single top-matched dataset. (`@tailwindcss/typography` installed, and rendering verified by user).
 *   **Backend Services (Initial & Vector Search):** `mongoService`, `aiService` (embedding), and `/api/process-vibe` route (with real vector search for datasets) are implemented and working.
 *   **Frontend Connected to Backend:** `MainAppPage.tsx` calls the API.
 *   **Backend Technology Stack:** Node.js with Express.js and TypeScript (Setup complete, initial services built).

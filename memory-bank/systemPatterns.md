@@ -34,7 +34,18 @@ VibeFlow will be a web application with the following major components:
 3.  **Database (MongoDB Atlas):**
     *   **Curated Resource Collections:**
         *   **Datasets Collection:** Stores metadata about public datasets (name, description, source, category, keywords, sample data snippets, vector embeddings).
-        *   **APIs Collection:** Stores metadata about APIs (name, description, common use cases, endpoint examples, links to documentation, vector embeddings).
+        *   **APIs Collection:** Stores metadata about APIs.
+            *   `name`: (String, Required) - The common name of the API (e.g., "OpenWeatherMap API", "Stripe API").
+            *   `description`: (String, Required) - A detailed description of what the API does and its primary purpose.
+            *   `category`: (String, Required) - A category for the API (e.g., "Weather", "Payments", "Mapping", "Social Media").
+            *   `documentation_url`: (String, Required) - A direct link to the official API documentation.
+            *   `base_url`: (String, Optional) - The base URL for making API calls.
+            *   `authentication_type`: (String, Optional) - Type of authentication required (e.g., "API Key", "OAuth 2.0", "None").
+            *   `common_use_cases`: (Array of Strings, Optional) - Examples of how this API is typically used.
+            *   `keywords`: (Array of Strings, Optional) - Relevant keywords for searching.
+            *   `sample_endpoint`: (String, Optional) - An example of a common API endpoint.
+            *   `sample_response_snippet`: (String, Optional) - A small snippet of a typical JSON response.
+            *   `description_embedding`: (Array of Floats, Required for Vector Search) - Vector embedding generated from the `description` and potentially other key text fields.
         *   **(Future) Learning Resources Collection:** Stores metadata about tutorials, articles, documentation (title, summary, link, tags, vector embeddings).
         *   **(Future) Open-Source Components/Patterns Collection:** Stores metadata about reusable code or architectural patterns (name, description, link, tech stack, vector embeddings).
 
