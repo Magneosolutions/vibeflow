@@ -6,13 +6,13 @@ dotenv.config(); // Load .env file contents into process.env
 
 export const config = {
   port: process.env.PORT || '3001',
-  mongoURI: process.env.MONGO_URI,
+  mongoURI: process.env.MONGODB_URI_VIBEFLOW, // Corrected to use the actual env var name
   geminiApiKey: process.env.GEMINI_API_KEY,
 };
 
 // Basic validation
 if (!config.mongoURI) {
-  console.error("FATAL ERROR: MONGO_URI is not defined. Please check your .env file.");
+  console.error("FATAL ERROR: MONGODB_URI_VIBEFLOW is not defined. Please check your .env file or Cloud Run service configuration."); // Updated error message
   process.exit(1);
 }
 
