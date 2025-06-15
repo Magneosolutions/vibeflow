@@ -1,6 +1,11 @@
 # Stage 1: Build the React application
 FROM node:20-alpine AS build
 
+# Declare build argument that will be passed from Cloud Build
+ARG VITE_API_BASE_URL_ARG
+# Set environment variable for the build process from the build argument
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL_ARG
+
 WORKDIR /app
 
 # Copy package.json and package-lock.json (or yarn.lock)
@@ -16,6 +21,7 @@ COPY . .
 ARG CACHEBUST=1
 RUN echo "Cache bust: ${CACHEBUST}"
 # Build the application
+# VITE_API_BASE_URL will now be available to this command
 RUN npm run build
 
 # Stage 2: Serve the application with Nginx
