@@ -5,6 +5,7 @@ import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import MainAppPage from './pages/MainAppPage';
+import AboutPage from './pages/AboutPage'; // Import the new AboutPage
 import { AuthProvider, useAuth } from './contexts/AuthContext'; // Import from new context file
 import './App.css';
 
@@ -54,6 +55,7 @@ const AppContent: React.FC = () => {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/about" element={<AboutPage />} /> {/* Add route for AboutPage */}
         <Route
           path="/"
           element={

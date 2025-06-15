@@ -35,7 +35,13 @@ const Layout: React.FC<LayoutProps> = ({
             </button>
             
             {/* Navigation with popout buttons */}
-            <nav className="flex items-center space-x-6">
+            <nav className="flex items-center space-x-4"> {/* Adjusted space-x for potentially more items */}
+              <button
+                onClick={() => onNavigate("/about")}
+                className="px-6 py-3 text-sm font-semibold text-gray-700 hover:text-brand-primary transition-colors duration-300 rounded-full hover:bg-gray-100"
+              >
+                About
+              </button>
               {isAuthenticated ? (
                 <button
                   onClick={onSignOut}
