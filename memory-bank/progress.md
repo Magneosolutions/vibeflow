@@ -98,16 +98,18 @@
     *   Created `vibeflow-backend/Dockerfile` to containerize the backend application. (2025-06-15).
     *   Verified that the backend's port configuration in `src/config/index.ts` correctly uses `process.env.PORT || '3001'`, suitable for Cloud Run. (2025-06-15).
 *   **Backend Ready for User Deployment:** The `vibeflow-backend` is fully prepared for the user to build, push to a container registry, and deploy to Google Cloud Run.
-*   **`vibeflow-backend` Deployed to Cloud Run:** Successfully deployed to `https://vibeflow-backend-679820915121.us-west2.run.app` and confirmed operational.
-*   **Frontend Connection Issue (`net::ERR_CONNECTION_REFUSED`):**
-    *   The deployed frontend (`https://vibeflow-679820915121.us-west2.run.app`) is failing to connect to the backend.
-    *   Identified Cause: The frontend's JavaScript code is defaulting to `http://localhost:3001/api` because `VITE_API_BASE_URL` was not available during its build process. The runtime environment variable set on the frontend's Cloud Run service is not picked up by the already-built static assets.
-*   **Next Step for Frontend:** User needs to update the Cloud Build trigger for the `vibeflow-frontend` (GitHub connected) to include `_VITE_API_BASE_URL` as a substitution variable with the value `https://vibeflow-backend-679820915121.us-west2.run.app`. Then, a new frontend build and deployment must be triggered.
+*   **`vibeflow-backend` Deployed to Cloud Run:** Successfully deployed to `https://vibeflow-backend-679820915121.us-west2.run.app/api` and confirmed operational.
+*   **Frontend Deployment Configuration Fixed:** Cloud Build trigger for `vibeflow-frontend` updated with correct `_VITE_API_BASE_URL` (including `/api` path). Frontend redeployed.
+*   **Application Working on Desktop:** VibeFlow is now functional end-to-end on desktop browsers.
+*   **Mobile Connection Issue Narrowed Down:**
+    *   Application shows "failed to load" on iPhone Chrome when "Flow" button is clicked (API call to `/api/process-vibe`).
+    *   Direct access to the backend root URL (`https://vibeflow-backend-679820915121.us-west2.run.app/`) *works* on iPhone Chrome.
+    *   This suggests the issue is specific to the frontend's API request from mobile, not general backend unreachability from the phone.
 
 ### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
-*   **User Action: Fix Frontend Deployment Configuration:**
-    *   Update Cloud Build trigger for `vibeflow-frontend` with `_VITE_API_BASE_URL` substitution.
-    *   Trigger a new build and deployment for the frontend.
+*   **Troubleshoot Mobile API Call Issue:**
+    *   Attempt to get detailed console/network logs from iPhone Chrome during the failed API call.
+    *   Investigate potential CORS nuances, Content Security Policy (CSP), or mobile browser-specific `fetch` behavior.
 *   **Enable API Search in Backend:**
     *   Modify `vibeRoutes.ts` to search the `apis` collection (once populated) in addition to `datasets`.
     *   Update frontend to display suggested APIs.

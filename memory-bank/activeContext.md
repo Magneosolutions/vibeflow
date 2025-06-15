@@ -100,16 +100,18 @@
 *   **Awaiting User Action for Backend Deployment:** User is currently building, pushing, and deploying the backend to Cloud Run.
 
 ## Next Steps
-1.  **Backend Deployed:**
-    *   `vibeflow-backend` successfully deployed to Cloud Run: `https://vibeflow-backend-679820915121.us-west2.run.app`
-2.  **Frontend Connection Issue Identified:**
-    *   Deployed frontend (`https://vibeflow-679820915121.us-west2.run.app`) fails to connect to backend (`net::ERR_CONNECTION_REFUSED`).
-    *   Cause: Frontend JavaScript is defaulting to `http://localhost:3001/api` because `VITE_API_BASE_URL` was not available at *build time*.
-3.  **User Action: Update Frontend Cloud Build Trigger:**
-    *   User to add a substitution variable `_VITE_API_BASE_URL` with the value `https://vibeflow-backend-679820915121.us-west2.run.app` to the Cloud Build trigger for the `vibeflow-frontend` (GitHub connected).
-4.  **User Action: Trigger New Frontend Build/Deployment:**
-    *   User to trigger a new build for the frontend (e.g., by pushing a commit or manually running the trigger).
-5.  **Continue Curating Other Resources (APIs, more Datasets):**
+1.  **Application Deployed & Working on Desktop:**
+    *   `vibeflow-backend` is live: `https://vibeflow-backend-679820915121.us-west2.run.app/api`
+    *   Frontend Cloud Build trigger updated with correct `_VITE_API_BASE_URL`.
+    *   Frontend redeployed. Application (`https://vibeflow-679820915121.us-west2.run.app`) successfully connects to the backend and fetches data on desktop browsers.
+2.  **Mobile Issue Narrowed Down:**
+    *   When testing on iPhone Chrome, clicking "Flow" results in a "failed to load" error for the API call to `/api/process-vibe`.
+    *   However, directly accessing the backend root URL (`https://vibeflow-backend-679820915121.us-west2.run.app/`) *does* work on iPhone Chrome ("VibeFlow Backend is Alive!").
+    *   This indicates the issue is specific to the frontend's API request from mobile, not general backend reachability.
+3.  **Troubleshooting Mobile API Call Issue:**
+    *   Attempt to get detailed console/network logs from iPhone Chrome during the failed API call.
+    *   Investigate potential CORS nuances, CSP, or mobile browser-specific `fetch` behavior.
+4.  **Continue Curating Other Resources (APIs, more Datasets):**
     *   Define schema for `apis` collection in MongoDB. (Completed 2025-06-14, documented in `systemPatterns.md`).
     *   Manually curate a small list (5-10) of common APIs (metadata, sample data snippets, vector embeddings).
         *   Created `vibeflow-backend/src/scripts/populateApiData.ts` with 2 initial APIs (Google Maps JS, Public APIs GitHub).
