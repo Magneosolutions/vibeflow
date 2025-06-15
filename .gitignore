@@ -42,3 +42,9 @@ Thumbs.db
 *~
 *.sublime-project
 *.sublime-workspace
+
+# Ignore Python files
+*.pyc
+__pycache__/
+
+

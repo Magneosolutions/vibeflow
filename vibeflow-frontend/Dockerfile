@@ -1,6 +1,9 @@
 # Stage 1: Build the React application
 FROM node:20-alpine AS build
 
+# Install build dependencies
+RUN apk add --no-cache python3 make g++
+
 # Declare build argument that will be passed from Cloud Build
 ARG VITE_API_BASE_URL_ARG
 # Set environment variable for the build process from the build argument
@@ -11,8 +14,13 @@ WORKDIR /app
 # Copy package.json and package-lock.json (or yarn.lock)
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies with retry logic and increased timeout
+RUN npm config set fetch-retry-mintimeout 20000 && \
+    npm config set fetch-retry-maxtimeout 120000 && \
+    npm config set fetch-retries 5 && \
+    npm config set loglevel verbose && \
+    npm install --no-audit --prefer-offline || \
+    (npm cache clean --force && npm install --no-audit)
 
 # Copy the rest of the application code
 COPY . .
