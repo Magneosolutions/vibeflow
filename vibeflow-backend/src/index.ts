@@ -13,7 +13,7 @@ app.use(express.json()); // Middleware to parse JSON bodies
 
 // Simple root route for testing
 app.get('/', (req: Request, res: Response) => {
-  res.send('VibeFlow Backend is Alive!');
+  res.send('VibeFlow Backend is Alive! v2.0 with API recommendations');
 });
 
 // Import and use vibeRoutes
