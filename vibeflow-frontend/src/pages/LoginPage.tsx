@@ -68,8 +68,33 @@ const LoginPage: React.FC = () => {
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Sign in to VibeFlow
         </h2>
+
+        {/* Enticing Description Start */}
+        <div className="mt-4 text-center max-w-md mx-auto"> {/* Added container for description */}
+          <h3 className="text-xl font-semibold text-brand-primary">
+            Got an App Idea? Let's Vibe.
+          </h3>
+          <p className="mt-1 text-sm text-gray-700">
+            Transform Your Spark into a Plan with VibeFlow, Your AI Co-Pilot for App Creation.
+          </p>
+          <p className="mt-3 text-sm text-gray-600 leading-relaxed">
+            Are you a 'vibecoder' – an innovator, dreamer, or developer with a brilliant app concept buzzing in your mind? VibeFlow is built for you!
+            Stop wondering 'what if' and start discovering 'what's next.' Simply describe your application idea, and our AI-powered platform will help you:
+          </p>
+          <ul className="mt-2 list-disc list-inside text-left inline-block text-sm text-gray-600 space-y-1">
+            <li><strong>Uncover Hidden Gems:</strong> Find relevant public datasets and APIs.</li>
+            <li><strong>Refine Your Vision:</strong> Get intelligent feedback and explore new angles.</li>
+            <li><strong>Learn & Grow:</strong> Access curated learning resources.</li>
+            <li><strong>Plan with Confidence:</strong> Move from raw idea to an actionable roadmap.</li>
+          </ul>
+          <p className="mt-2 text-sm text-gray-600">
+            VibeFlow doesn't just write code; it empowers you with insights. Sign up or log in to start flowing your ideas into reality!
+          </p>
+        </div>
+        {/* Enticing Description End */}
+
         {/* Link to Sign Up page */}
-        <p className="mt-2 text-center text-sm text-gray-600">
+        <p className="mt-8 text-center text-sm text-gray-600"> {/* Increased mt for spacing */}
           Or{' '}
           <Link to="/signup" className="font-medium text-brand-primary hover:text-brand-secondary">
             create a new account
