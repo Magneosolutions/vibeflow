@@ -1,7 +1,7 @@
 import express, { Router, Request, Response, NextFunction } from 'express';
 import { getTextEmbedding, getAIFeedback } from '../services/aiService';
 import { getCollection } from '../services/mongoService';
-import { Document as MongoDocument } from 'mongodb';
+import { Document as MongoDocument, ObjectId } from 'mongodb'; // Added ObjectId
 
 const router: Router = express.Router();
 
@@ -9,33 +9,63 @@ interface ProcessVibeRequestBody {
   vibeText: string;
 }
 
+// This interface should now mirror DatasetResource from populateLocalEventsDatasets.ts
 interface DatasetDocument extends MongoDocument {
+  _id?: ObjectId; // Keep MongoDB ObjectId if it's part of your retrieval
+  id: string; // Custom unique ID
   name: string;
   description: string;
-  description_embedding?: number[];
-  source_url?: string;
-  category?: string[]; // Changed from categories
+  resourceType: 'Local Event' | 'API' | 'Community Data Source' | 'Public Dataset' | 'Other';
+
+  sourceUrl?: string;
+  originalSourceName?: string;
+  categories: string[]; // Note: 'categories' (plural)
   keywords?: string[];
-  sample_data_snippet?: any;
-  potential_use_cases?: string[];
-  core_features?: string[]; // Added for playground
+  dataFormat?: string[];
+  updateFrequency?: string;
+  license?: string;
+  potentialUseCases?: string[];
+  sampleDataSnippet?: any;
+
+  eventDetails?: {
+    type: string;
+    date: string;
+    time?: string;
+    location: {
+      address?: string;
+      city: string;
+      state: string;
+      zip?: string;
+      venueName?: string;
+      coordinates?: { lat: number; lon: number; };
+    };
+    organizer?: string;
+    imageUrl?: string;
+  };
+
+  apiDetails?: {
+    documentationUrl: string;
+    endpointExample?: string;
+    pricingModel?: string;
+  };
+
+  communityDataDetails?: {
+    dataType: string;
+    locationFocus?: string;
+    keyInsights?: string[];
+    collectionDate?: string;
+  };
+  
+  dateAddedToVibeflow?: Date;
+  lastVerifiedByVibeflow?: Date;
+  notesForVibeflowAdmin?: string;
+  
+  description_embedding?: number[];
+  score?: number; // For vectorSearchScore
+  core_features?: string[]; // If still used for some 'Public Dataset' types like app ideas
 }
 
-interface ApiDocument extends MongoDocument {
-  name: string;
-  description: string;
-  category: string;
-  documentation_url: string;
-  base_url?: string;
-  authentication_type?: string;
-  common_use_cases?: string[];
-  keywords?: string[];
-  sample_endpoint?: string;
-  sample_response_snippet?: string;
-  description_embedding?: number[];
-}
-
-// Async error handling middleware (optional, but good practice for Express async routes)
+// Async error handling middleware
 const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) => 
   (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(fn(req, res, next)).catch(next);
@@ -45,118 +75,76 @@ router.post('/process-vibe', asyncHandler(async (req: Request<{}, any, ProcessVi
   const { vibeText } = req.body;
 
   if (!vibeText || typeof vibeText !== 'string' || vibeText.trim() === "") {
-    // Use return to ensure no further code in this handler executes
     return res.status(400).json({ error: 'vibeText is required and must be a non-empty string.' });
   }
 
   console.log(`Processing vibe: "${vibeText.substring(0, 100)}..."`);
 
-  // 1. Get embedding for the user's vibe text
   const vibeEmbedding = await getTextEmbedding(vibeText);
 
   if (!vibeEmbedding) {
-    // Use return
     return res.status(500).json({ error: 'Failed to generate embedding for the vibe text.' });
   }
 
-  // 2. Perform Vector Search in MongoDB using vibeEmbedding
-  let searchResults: DatasetDocument[] = [];
-  const datasetsCollection = getCollection<DatasetDocument>('datasets');
+  const datasetsCollection = getCollection<DatasetDocument>('datasets'); // Target the consolidated 'datasets' collection
   
-  // Actual vector search for datasets
-  searchResults = await datasetsCollection.aggregate([
+  const searchResults = await datasetsCollection.aggregate([
     {
       $vectorSearch: {
-        index: 'vector_index_datasets_description', 
+        index: 'vector_index_datasets_description', // Ensure this index exists on vibeflow_db.datasets
         path: 'description_embedding', 
         queryVector: vibeEmbedding,    
-        numCandidates: 100,            
-        limit: 1, // Keep dataset results to 1 for focused AI feedback for now
+        numCandidates: 150,
+        limit: 5, // Get top 5 diverse resources
       },
     },
     {
       $project: { 
-        _id: 0, 
+        _id: 0, // Exclude MongoDB's _id from the direct response if you use your custom 'id'
+        id: 1,
         name: 1,
         description: 1,
-        source_url: 1,
-        category: 1, 
+        resourceType: 1,
+        sourceUrl: 1,
+        originalSourceName: 1,
+        categories: 1,
         keywords: 1,
-        sample_data_snippet: 1,
-        potential_use_cases: 1,
-        core_features: 1, 
+        dataFormat: 1,
+        updateFrequency: 1,
+        license: 1,
+        potentialUseCases: 1,
+        sampleDataSnippet: 1,
+        eventDetails: 1,
+        apiDetails: 1,
+        communityDataDetails: 1,
+        core_features: 1, // Include if some datasets (like app ideas) still use this
         score: { $meta: 'vectorSearchScore' } 
       }
     }
   ]).toArray() as DatasetDocument[]; 
-  console.log(`Found ${searchResults.length} datasets via vector search.`);
+  console.log(`Found ${searchResults.length} resources from 'datasets' collection via vector search.`);
 
-  // 3. Perform Vector Search for APIs
-  let apiResults: ApiDocument[] = [];
-  const apisCollection = getCollection<ApiDocument>('apis');
-  apiResults = await apisCollection.aggregate([
-    {
-      $vectorSearch: {
-        index: 'vector_index_apis_description', // Ensure this is your API vector index name
-        path: 'description_embedding',    // Field containing the vector in 'apis' collection
-        queryVector: vibeEmbedding,
-        numCandidates: 50,               // Can be different from datasets
-        limit: 3,                        // Return top 3 API matches
-      },
-    },
-    {
-      $project: {
-        _id: 0,
-        name: 1,
-        description: 1,
-        category: 1,
-        documentation_url: 1,
-        base_url: 1,
-        authentication_type: 1,
-        common_use_cases: 1,
-        keywords: 1,
-        score: { $meta: 'vectorSearchScore' }
-      }
-    }
-  ]).toArray() as ApiDocument[];
-  console.log(`Found ${apiResults.length} APIs via vector search.`);
-
-  // 4. Get AI Feedback (Vibe Check)
-  // Pass the matched dataset (if any) to getAIFeedback. API results are not used for feedback yet.
-  let matchedDatasetInfo: { name: string, description: string } | null = null;
+  let topMatchForAI: { name: string, description: string } | null = null;
   if (searchResults.length > 0 && searchResults[0]) {
-    // Ensure description is a string, provide a fallback if not (though it should be)
-    const description = typeof searchResults[0].description === 'string' ? searchResults[0].description : 'No description available.';
-    matchedDatasetInfo = { 
-      name: searchResults[0].name, 
-      description: description
+    const topHit = searchResults[0];
+    // Construct a simple object for getAIFeedback, which expects name and description
+    topMatchForAI = { 
+      name: topHit.name, 
+      description: typeof topHit.description === 'string' ? topHit.description : 'No description available.'
     };
   }
-  const aiFeedback = await getAIFeedback(vibeText, matchedDatasetInfo);
+  const aiFeedback = await getAIFeedback(vibeText, topMatchForAI);
 
-  // Use return
   const messageBase = "Vibe processed.";
-  let messageDetail = "";
-  if (searchResults.length > 0 && apiResults.length > 0) {
-    messageDetail = "Dataset and API matches found.";
-  } else if (searchResults.length > 0) {
-    messageDetail = "Dataset matches found, no direct API matches.";
-  } else if (apiResults.length > 0) {
-    messageDetail = "API matches found, no direct dataset matches.";
-  } else {
-    messageDetail = "No direct dataset or API matches found.";
-  }
+  const messageDetail = searchResults.length > 0 ? "Resources found." : "No direct resource matches found.";
 
   return res.status(200).json({
     message: `${messageBase} ${messageDetail}`,
     vibeText,
     vibeEmbeddingDimensions: vibeEmbedding.length,
-    searchResults,
-    apiResults, // Add apiResults to the response
+    results: searchResults, // Consolidated results
     aiFeedback,
   });
-  // No 'catch' block needed here if using asyncHandler, as it passes errors to Express's error handlers
-  // The asyncHandler will pass errors to the global error handler in index.ts
 }));
 
 export default router;
