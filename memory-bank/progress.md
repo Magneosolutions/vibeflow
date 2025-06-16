@@ -3,6 +3,9 @@
 ## Current Status: API Resource Discovery Feature successfully implemented and verified end-to-end.
 
 ### What Works (Implemented & Documented)
+*   **UI Disclaimers for Data Limitations:**
+    *   Added a disclaimer to `MainAppPage.tsx` about VibeFlow being a proof-of-concept with a growing curated resource collection. (2025-06-15)
+    *   Added a new Q&A item to `FAQPage.tsx` explaining the limited dataset size and proof-of-concept status. (2025-06-15)
 *   **Expanded API/Resource Curation:** Successfully added "Awesome Public Datasets (GitHub)" to the `apis` collection via the `populateApiData.ts` script, and user confirmed it's discoverable in the UI. (2025-06-15)
 *   **End-to-End API Resource Discovery:**
     *   `apis` collection populated in MongoDB with embeddings via `populateApiData.ts` script.
@@ -129,6 +132,7 @@
     *   Consider any minor UI tweaks for clarity or improved user flow based on current features, including the display of API results.
 *   **Commit Memory Bank Updates to Version Control:**
     *   The current updates to `activeContext.md`, `progress.md`, and `techContext.md` need to be committed and pushed. (This was completed for API feature verification and "Awesome Public Datasets" addition. A new commit will be needed for the build fix and these current memory bank updates).
+*   **Deploy Frontend Changes:** The UI disclaimer updates in `MainAppPage.tsx` and `FAQPage.tsx` need to be deployed to Cloud Run to be live.
 
 ### Known Issues & Blockers
 *   **(Resolved) Frontend Build Failure:** A syntax error in `vibeflow-frontend/src/firebaseConfig.ts` (related to `apiKey`) caused CI/CD builds to fail. This was corrected, and a subsequent build was successful.

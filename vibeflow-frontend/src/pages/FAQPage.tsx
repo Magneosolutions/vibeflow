@@ -59,6 +59,10 @@ const FAQPage: React.FC = () => {
       answer: "VibeFlow searches through a curated collection of publicly available datasets and API information. This includes data from various domains like government, finance, social media trends, public utilities, and more. The goal is to help you find existing data and services that could be leveraged for your application."
     },
     {
+      question: "Why am I not finding many resources for my specific app idea?",
+      answer: "VibeFlow is currently a proof-of-concept, and our curated collection of datasets and APIs is actively growing. While we aim to provide relevant suggestions, our database is not yet exhaustive. If you don't find specific resources for a niche idea, it might be because it's outside our current curated set. We're continuously adding more resources to improve coverage. VibeFlow's main goal at this stage is to demonstrate the power of AI and vector search in discovering and refining app ideas based on available data."
+    },
+    {
       question: "Is VibeFlow free to use?",
       answer: "Yes, VibeFlow is currently free to use during this phase."
     },

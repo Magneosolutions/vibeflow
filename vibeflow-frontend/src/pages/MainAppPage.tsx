@@ -205,6 +205,9 @@ const MainAppPage: React.FC = () => {
           <p className="mt-3 text-sm text-gray-600">
             Ready to explore your idea? Let it flow below!
           </p>
+          <p className="mt-4 text-sm text-amber-700 bg-amber-50 p-3 rounded-md border border-amber-200">
+            <strong>Please Note:</strong> VibeFlow is currently a proof-of-concept. Our collection of curated datasets and APIs is actively growing. We appreciate your understanding as we expand our database to provide even more relevant resources for your innovative ideas!
+          </p>
         </div>
 
         <div className="mt-8 space-y-6">

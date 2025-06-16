@@ -44,6 +44,9 @@
     *   (Frontend already displays this feedback, potentially with markdown rendering).
 
 ## Recent Changes
+*   **Added UI Disclaimers for Data Limitations:**
+    *   Updated `MainAppPage.tsx` to include a disclaimer about VibeFlow being a proof-of-concept with a growing but currently limited curated resource collection. (2025-06-15)
+    *   Updated `FAQPage.tsx` with a new Q&A item explaining the limited dataset size and proof-of-concept status. (2025-06-15)
 *   **Frontend Build Fixed:** Corrected syntax error in `vibeflow-frontend/src/firebaseConfig.ts` (related to `apiKey`). Subsequent build after pushing the fix was successful. (2025-06-15)
 *   **Added "Awesome Public Datasets" Resource:** Updated `populateApiData.ts` script to include "Awesome Public Datasets (GitHub)". User ran the script successfully, and confirmed the new resource is discoverable in the VibeFlow UI. (2025-06-15)
 *   **API Feature Verified via UI:** User confirmed "Suggested APIs" (including Google Maps API) are displayed correctly in the UI after successful backend redeployment and positive `curl` test. (2025-06-15)
