@@ -21,7 +21,8 @@ export interface LocalEvent {
   sourceUrl?: string;
   imageUrl?: string;
   // Fields to be combined for vector embedding
-  vectorEmbeddingSourceFields: (keyof Omit<LocalEvent, 'id' | 'vectorEmbeddingSourceFields' | 'imageUrl' | 'sourceUrl' | 'coordinates'>)[];
+  vectorEmbeddingSourceFields: (keyof Omit<LocalEvent, 'id' | 'vectorEmbeddingSourceFields' | 'imageUrl' | 'sourceUrl' | 'coordinates' | 'embedding'>)[];
+  embedding?: number[];
 }
 
 export interface LocationApi {
@@ -34,7 +35,8 @@ export interface LocationApi {
   pricingModel?: string; // e.g., "Free", "Freemium", "Paid"
   tags: string[];
   // Fields to be combined for vector embedding
-  vectorEmbeddingSourceFields: (keyof Omit<LocationApi, 'id' | 'vectorEmbeddingSourceFields' | 'endpointExample' | 'documentationUrl'>)[];
+  vectorEmbeddingSourceFields: (keyof Omit<LocationApi, 'id' | 'vectorEmbeddingSourceFields' | 'endpointExample' | 'documentationUrl' | 'embedding'>)[];
+  embedding?: number[];
 }
 
 export interface CommunityEngagementData {
@@ -47,7 +49,8 @@ export interface CommunityEngagementData {
   relevantTopics: string[];
   collectionDate?: string; // ISO Date string
   // Fields to be combined for vector embedding
-  vectorEmbeddingSourceFields: (keyof Omit<CommunityEngagementData, 'id' | 'vectorEmbeddingSourceFields' | 'collectionDate'>)[];
+  vectorEmbeddingSourceFields: (keyof Omit<CommunityEngagementData, 'id' | 'vectorEmbeddingSourceFields' | 'collectionDate' | 'embedding'>)[];
+  embedding?: number[];
 }
 
 export const sampleLocalEvents: LocalEvent[] = [
@@ -170,48 +173,113 @@ export const sampleCommunityEngagementSources: CommunityEngagementData[] = [
   },
 ];
 
-// Example of how you might use this data in a seeding script:
-// import { MongoClient } from 'mongodb';
-// import { sampleLocalEvents, sampleLocationApis, sampleCommunityEngagementSources } from './populateLocalEventsDatasets';
+import { MongoClient } from 'mongodb';
+import { getTextEmbedding } from '../services/aiService'; // Assuming aiService is in src/services
+import { config } from '../config'; // To access MONGODB_URI if needed
 
-// async function seedDatabase() {
-//   const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/vibeflow';
-//   const client = new MongoClient(uri);
+// Helper function to construct text for embedding
+function constructEmbeddingText<T extends { vectorEmbeddingSourceFields: (keyof any)[] }>(
+  item: T,
+  fields: (keyof T)[]
+): string {
+  return fields
+    .map(field => {
+      const value = item[field];
+      if (Array.isArray(value)) {
+        return value.join(', ');
+      }
+      if (typeof value === 'object' && value !== null) {
+        // For simple location objects, you might want to stringify them or pick specific sub-fields
+        // For this generic helper, we'll stringify, but specific handling might be better
+        return JSON.stringify(value);
+      }
+      return String(value);
+    })
+    .join('; ');
+}
 
-//   try {
-//     await client.connect();
-//     const database = client.db('vibeflow_data'); // Or your specific DB name
 
-//     const eventsCollection = database.collection('localEvents');
-//     const apisCollection = database.collection('locationApis');
-//     const communityDataCollection = database.collection('communityEngagementData');
+async function seedDatabase() {
+  if (!config.mongoURI) {
+    console.error("MONGODB_URI is not defined in environment variables. Exiting.");
+    process.exit(1);
+  }
+  if (!config.geminiApiKey) {
+    console.error("GEMINI_API_KEY is not defined in environment variables. Cannot generate embeddings. Exiting.");
+    process.exit(1);
+  }
 
-//     // Clear existing data (optional)
-//     // await eventsCollection.deleteMany({});
-//     // await apisCollection.deleteMany({});
-//     // await communityDataCollection.deleteMany({});
+  const client = new MongoClient(config.mongoURI);
+  console.log("Attempting to connect to MongoDB...");
 
-//     // Insert new data
-//     // Note: In a real scenario, you'd generate vector embeddings here before insertion
-//     // For now, we're just inserting the data as is.
-//     if (sampleLocalEvents.length > 0) {
-//       await eventsCollection.insertMany(sampleLocalEvents.map(e => ({ ...e, _id: e.id })));
-//       console.log(`${sampleLocalEvents.length} local events seeded.`);
-//     }
-//     if (sampleLocationApis.length > 0) {
-//       await apisCollection.insertMany(sampleLocationApis.map(a => ({ ...a, _id: a.id })));
-//       console.log(`${sampleLocationApis.length} location APIs seeded.`);
-//     }
-//     if (sampleCommunityEngagementSources.length > 0) {
-//       await communityDataCollection.insertMany(sampleCommunityEngagementSources.map(c => ({ ...c, _id: c.id })));
-//       console.log(`${sampleCommunityEngagementSources.length} community engagement sources seeded.`);
-//     }
+  try {
+    await client.connect();
+    console.log("Successfully connected to MongoDB.");
+    const database = client.db('vibeflow_data'); // Or your specific DB name, e.g., from config
 
-//   } catch (err) {
-//     console.error('Error seeding database:', err);
-//   } finally {
-//     await client.close();
-//   }
-// }
+    const eventsCollection = database.collection<LocalEvent>('localEvents');
+    const apisCollection = database.collection<LocationApi>('locationApis');
+    const communityDataCollection = database.collection<CommunityEngagementData>('communityEngagementData');
 
-// // seedDatabase(); // Uncomment to run directly
+    console.log("Preparing to seed localEvents...");
+    for (const event of sampleLocalEvents) {
+      const textToEmbed = constructEmbeddingText(event, event.vectorEmbeddingSourceFields as (keyof LocalEvent)[]);
+      console.log(`LocalEvent: ${event.eventName} - Text to embed: "${textToEmbed.substring(0,100)}..."`);
+      const embedding = await getTextEmbedding(textToEmbed);
+      if (embedding) {
+        event.embedding = embedding;
+        // Use MongoDB's _id for the document ID, map your 'id' to another field if needed or ensure it's unique
+        await eventsCollection.updateOne({ id: event.id }, { $set: event }, { upsert: true });
+        console.log(`  Upserted event: ${event.eventName} with embedding.`);
+      } else {
+        console.warn(`  Could not generate embedding for event: ${event.eventName}. Skipping embedding for this item.`);
+        await eventsCollection.updateOne({ id: event.id }, { $set: { ...event, embedding: undefined } }, { upsert: true });
+      }
+    }
+    console.log(`${sampleLocalEvents.length} local events processed.`);
+
+    console.log("Preparing to seed locationApis...");
+    for (const api of sampleLocationApis) {
+      const textToEmbed = constructEmbeddingText(api, api.vectorEmbeddingSourceFields as (keyof LocationApi)[]);
+      console.log(`LocationApi: ${api.apiName} - Text to embed: "${textToEmbed.substring(0,100)}..."`);
+      const embedding = await getTextEmbedding(textToEmbed);
+      if (embedding) {
+        api.embedding = embedding;
+        await apisCollection.updateOne({ id: api.id }, { $set: api }, { upsert: true });
+        console.log(`  Upserted API: ${api.apiName} with embedding.`);
+      } else {
+        console.warn(`  Could not generate embedding for API: ${api.apiName}. Skipping embedding for this item.`);
+        await apisCollection.updateOne({ id: api.id }, { $set: { ...api, embedding: undefined } }, { upsert: true });
+      }
+    }
+    console.log(`${sampleLocationApis.length} location APIs processed.`);
+
+    console.log("Preparing to seed communityEngagementData...");
+    for (const source of sampleCommunityEngagementSources) {
+      const textToEmbed = constructEmbeddingText(source, source.vectorEmbeddingSourceFields as (keyof CommunityEngagementData)[]);
+      console.log(`CommunityData: ${source.sourceName} - Text to embed: "${textToEmbed.substring(0,100)}..."`);
+      const embedding = await getTextEmbedding(textToEmbed);
+      if (embedding) {
+        source.embedding = embedding;
+        await communityDataCollection.updateOne({ id: source.id }, { $set: source }, { upsert: true });
+        console.log(`  Upserted community source: ${source.sourceName} with embedding.`);
+      } else {
+        console.warn(`  Could not generate embedding for community source: ${source.sourceName}. Skipping embedding for this item.`);
+        await communityDataCollection.updateOne({ id: source.id }, { $set: { ...source, embedding: undefined } }, { upsert: true });
+      }
+    }
+    console.log(`${sampleCommunityEngagementSources.length} community engagement sources processed.`);
+
+    console.log("Database seeding process completed.");
+
+  } catch (err) {
+    console.error('Error during database seeding:', err);
+  } finally {
+    console.log("Closing MongoDB connection.");
+    await client.close();
+  }
+}
+
+// To run this script directly (e.g., using ts-node):
+// Ensure MONGODB_URI and GEMINI_API_KEY are set in your environment or .env file loaded by 'config'.
+seedDatabase().catch(console.error);
