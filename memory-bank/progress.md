@@ -128,9 +128,10 @@
 *   **Review and Refine Overall UX/UI:**
     *   Consider any minor UI tweaks for clarity or improved user flow based on current features, including the display of API results.
 *   **Commit Memory Bank Updates to Version Control:**
-    *   The current updates to `activeContext.md`, `progress.md`, and `techContext.md` need to be committed and pushed.
+    *   The current updates to `activeContext.md`, `progress.md`, and `techContext.md` need to be committed and pushed. (This was completed for API feature verification and "Awesome Public Datasets" addition. A new commit will be needed for the build fix and these current memory bank updates).
 
 ### Known Issues & Blockers
+*   **(Resolved) Frontend Build Failure:** A syntax error in `vibeflow-frontend/src/firebaseConfig.ts` (related to `apiKey`) caused CI/CD builds to fail. This was corrected, and a subsequent build was successful.
 *   **(Resolved) API Suggestions Not Appearing in Frontend:** This issue was due to an outdated backend deployment. Resolved by user redeploying `vibeflow-backend` with the latest code. `apiResults` are now correctly returned by the backend and displayed by the frontend.
 *   **Frontend Login/Navigation Issue (Deferred):** Link from sign-up to login page was observed to be non-functional.
 *   **Mobile API Call Issue (Pending Investigation):** API calls from mobile browsers may be failing.
