@@ -11,15 +11,15 @@ interface ProcessVibeRequestBody {
 
 // This interface should now mirror DatasetResource from populateLocalEventsDatasets.ts
 interface DatasetDocument extends MongoDocument {
-  _id?: ObjectId; // Keep MongoDB ObjectId if it's part of your retrieval
-  id: string; // Custom unique ID
+  _id?: ObjectId; 
+  id: string; 
   name: string;
   description: string;
   resourceType: 'Local Event' | 'API' | 'Community Data Source' | 'Public Dataset' | 'Other';
 
   sourceUrl?: string;
   originalSourceName?: string;
-  categories: string[]; // Note: 'categories' (plural)
+  categories: string[]; 
   keywords?: string[];
   dataFormat?: string[];
   updateFrequency?: string;
@@ -61,8 +61,8 @@ interface DatasetDocument extends MongoDocument {
   notesForVibeflowAdmin?: string;
   
   description_embedding?: number[];
-  score?: number; // For vectorSearchScore
-  core_features?: string[]; // If still used for some 'Public Dataset' types like app ideas
+  score?: number; 
+  core_features?: string[]; 
 }
 
 // Async error handling middleware
@@ -86,21 +86,22 @@ router.post('/process-vibe', asyncHandler(async (req: Request<{}, any, ProcessVi
     return res.status(500).json({ error: 'Failed to generate embedding for the vibe text.' });
   }
 
-  const datasetsCollection = getCollection<DatasetDocument>('datasets'); // Target the consolidated 'datasets' collection
+  const datasetsCollection = getCollection<DatasetDocument>('datasets');
   
+  const initialLimit = 10; // Fetch a slightly larger pool for potential filtering
   const searchResults = await datasetsCollection.aggregate([
     {
       $vectorSearch: {
-        index: 'vector_index_datasets_description', // Ensure this index exists on vibeflow_db.datasets
+        index: 'vector_index_datasets_description', 
         path: 'description_embedding', 
         queryVector: vibeEmbedding,    
-        numCandidates: 150,
-        limit: 5, // Get top 5 diverse resources
+        numCandidates: 150, 
+        limit: initialLimit, 
       },
     },
     {
       $project: { 
-        _id: 0, // Exclude MongoDB's _id from the direct response if you use your custom 'id'
+        _id: 0, 
         id: 1,
         name: 1,
         description: 1,
@@ -117,32 +118,53 @@ router.post('/process-vibe', asyncHandler(async (req: Request<{}, any, ProcessVi
         eventDetails: 1,
         apiDetails: 1,
         communityDataDetails: 1,
-        core_features: 1, // Include if some datasets (like app ideas) still use this
+        core_features: 1,
         score: { $meta: 'vectorSearchScore' } 
       }
     }
   ]).toArray() as DatasetDocument[]; 
-  console.log(`Found ${searchResults.length} resources from 'datasets' collection via vector search.`);
+  console.log(`Found ${searchResults.length} initial resources from 'datasets' collection via vector search.`);
+
+  let finalResults: DatasetDocument[] = [];
+  const desiredResultCount = 5;
+
+  if (vibeText.toLowerCase().includes('event')) {
+    console.log("Query indicates interest in events. Prioritizing 'Local Event' type.");
+    const eventResults = searchResults.filter(r => r.resourceType === 'Local Event');
+    const otherResults = searchResults.filter(r => r.resourceType !== 'Local Event');
+    
+    finalResults = [...eventResults, ...otherResults].slice(0, desiredResultCount);
+    
+    if (eventResults.length > 0) {
+      console.log(`Prioritized event results. Showing ${eventResults.filter(r => r.resourceType === 'Local Event').length} local events out of ${finalResults.length} total results.`);
+    } else {
+      console.log("No 'Local Event' type found in initial results, showing top vector search results based on score.");
+    }
+  } else {
+    finalResults = searchResults.slice(0, desiredResultCount);
+  }
+  
+  console.log(`Final result count: ${finalResults.length}`);
 
   let topMatchForAI: { name: string, description: string } | null = null;
-  if (searchResults.length > 0 && searchResults[0]) {
-    const topHit = searchResults[0];
-    // Construct a simple object for getAIFeedback, which expects name and description
+  const feedbackCandidate = finalResults.length > 0 ? finalResults[0] : (searchResults.length > 0 ? searchResults[0] : null);
+
+  if (feedbackCandidate) {
     topMatchForAI = { 
-      name: topHit.name, 
-      description: typeof topHit.description === 'string' ? topHit.description : 'No description available.'
+      name: feedbackCandidate.name, 
+      description: typeof feedbackCandidate.description === 'string' ? feedbackCandidate.description : 'No description available.'
     };
   }
   const aiFeedback = await getAIFeedback(vibeText, topMatchForAI);
 
   const messageBase = "Vibe processed.";
-  const messageDetail = searchResults.length > 0 ? "Resources found." : "No direct resource matches found.";
+  const messageDetail = finalResults.length > 0 ? "Resources found." : "No direct resource matches found.";
 
   return res.status(200).json({
     message: `${messageBase} ${messageDetail}`,
     vibeText,
     vibeEmbeddingDimensions: vibeEmbedding.length,
-    results: searchResults, // Consolidated results
+    results: finalResults,
     aiFeedback,
   });
 }));
