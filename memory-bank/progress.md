@@ -1,12 +1,17 @@
 # Progress: VibeFlow
 
-## Current Status: Troubleshooting API Resource Discovery. Suspected outdated backend deployment.
+## Current Status: API Resource Discovery Feature successfully implemented and verified end-to-end.
 
 ### What Works (Implemented & Documented)
+*   **End-to-End API Resource Discovery:**
+    *   `apis` collection populated in MongoDB with embeddings via `populateApiData.ts` script.
+    *   Atlas Vector Search index `vector_index_apis_description` confirmed active and correctly configured.
+    *   Backend (`vibeRoutes.ts`) successfully searches `apis` collection and includes `apiResults` in the response (verified after backend redeployment).
+    *   Frontend (`MainAppPage.tsx`) correctly displays "Suggested APIs" with details.
 *   **API Data Population Script (`populateApiData.ts`):** Successfully created and executed, populating the `apis` collection in MongoDB with 2 initial APIs and their embeddings. TypeScript error previously blocking this script has been resolved.
 *   **Atlas Vector Search Index for APIs (`vector_index_apis_description`):** Confirmed by user to be correctly configured (name: `vector_index_apis_description`, field: `description_embedding`, dimensions: 768) and 'READY' (active) in MongoDB Atlas.
-*   **Backend API Endpoint Code (`/api/process-vibe` in `vibeRoutes.ts`):** Local version of the code includes logic for searching both datasets and APIs, and for including `apiResults` in the JSON response. (Note: Deployed version currently does not return `apiResults`).
-*   **Frontend Display Logic for APIs (`MainAppPage.tsx`):** Local version of the code includes logic to render 'Suggested APIs' if `apiResults` are present in the data from the backend. (Note: End-to-end display unverified due to backend issue).
+*   **Backend API Endpoint Code (`/api/process-vibe` in `vibeRoutes.ts`):** Deployed version now correctly searches both datasets and APIs, and includes `apiResults` in the JSON response.
+*   **Frontend Display Logic for APIs (`MainAppPage.tsx`):** Verified to correctly render 'Suggested APIs' when data is provided by the backend.
 *   **Strategic Product Direction Defined:** VibeFlow is now an "Interactive Vibe Refinement & Learning Tool." Core Memory Bank documents (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, this file) reflect this new direction.
 *   **Strategic Product Direction Defined:** VibeFlow is now an "Interactive Vibe Refinement & Learning Tool." Core Memory Bank documents (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, this file) reflect this new direction.
 *   **UI Updated for New Direction:** `vibeflow-frontend/src/pages/MainAppPage.tsx` updated with introductory text explaining the new focus.
@@ -112,24 +117,22 @@
     *   This suggests the issue is specific to the frontend's API request from mobile, not general backend unreachability from the phone.
 
 ### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
-*   **Verify End-to-End API Search & Display Functionality:**
-    *   **User to Redeploy `vibeflow-backend` to Cloud Run:** Ensure the latest code (including API search logic and `apiResults` in the response) is live. User is currently working on this with corrected `gcloud` command.
-    *   **Confirm `apiResults` in Backend Response:** After redeployment, re-test with `curl` to ensure the `apiResults` field is present and populated in the backend's JSON output.
-    *   **Verify Frontend Display of APIs:** If `curl` test is successful, test via the VibeFlow UI with a targeted vibe to confirm "Suggested APIs" are displayed correctly.
-*   **Troubleshoot Mobile API Call Issue (If Persists):**
-    *   Once desktop API search functionality is confirmed, investigate and resolve the mobile API call issue.
-*   **Troubleshoot Frontend Login/Navigation (Deferred):**
-    *   Address the issue observed where navigating from the sign-up page to the login page via the link was not working.
+*   **Troubleshoot Frontend Login/Navigation Issue:**
+    *   Investigate and fix the issue where the link from the sign-up page (`SignUpPage.tsx`) to the login page (`LoginPage.tsx`) was not working correctly. This was deferred during API testing.
+*   **Troubleshoot Mobile API Call Issue:**
+    *   Investigate why API calls from mobile browsers might be failing, even if the backend is reachable directly from the mobile browser. Consider CORS, CSP, or specific mobile `fetch` behaviors.
 *   **Continue Curating API Resources:**
-    *   Once API search and display are confirmed working, curate and add more APIs to the `apis` collection in MongoDB.
+    *   Now that API search and display are functional, expand the `apis` collection in MongoDB with more diverse and relevant APIs.
+    *   Run `populateApiData.ts` (or an enhanced version) to add new APIs and their embeddings.
 *   **Review and Refine Overall UX/UI:**
-    *   Consider any minor UI tweaks for clarity or improved user flow based on current features.
+    *   Consider any minor UI tweaks for clarity or improved user flow based on current features, including the display of API results.
+*   **Commit Memory Bank Updates to Version Control:**
+    *   The current updates to `activeContext.md`, `progress.md`, and `techContext.md` need to be committed and pushed.
 
 ### Known Issues & Blockers
-*   **API Suggestions Not Appearing in Frontend:**
-    *   **Symptom:** Despite backend and frontend code appearing to support API search/display, and API data/index being set up, API suggestions are not shown in the UI. Direct `curl` test to the live backend confirms the `apiResults` field is missing from the JSON response.
-    *   **Suspected Cause:** The deployed version of `vibeflow-backend` on Cloud Run is outdated and does not include the latest changes for API searching and response structure.
-    *   **Current Next Step:** User is attempting to redeploy `vibeflow-backend` with the latest code.
+*   **(Resolved) API Suggestions Not Appearing in Frontend:** This issue was due to an outdated backend deployment. Resolved by user redeploying `vibeflow-backend` with the latest code. `apiResults` are now correctly returned by the backend and displayed by the frontend.
+*   **Frontend Login/Navigation Issue (Deferred):** Link from sign-up to login page was observed to be non-functional.
+*   **Mobile API Call Issue (Pending Investigation):** API calls from mobile browsers may be failing.
 
 ### Overall Project Health
-*   **Good (Amber):** Core functionality for dataset discovery and the dataset playground is operational on deployed environments. However, a key feature – API resource discovery – is currently not working end-to-end due to a suspected outdated backend deployment. Troubleshooting is actively underway to resolve this by guiding the user through backend redeployment. Other items like mobile compatibility and minor UI navigation issues are pending.
+*   **Excellent (Green):** Core functionality for dataset discovery, API resource discovery, and the dataset playground is now operational on deployed environments. The VibeFlow application is successfully demonstrating its key Phase 1 MVP features. Remaining tasks involve addressing minor UI/navigation issues, mobile compatibility, and expanding curated content.
