@@ -70,17 +70,17 @@ const sampleResources: DatasetResource[] = [
   {
     id: 'evt_001',
     name: 'Summer Sounds Music Fest',
-    description: 'Annual outdoor music festival featuring diverse local and regional bands. Food trucks and family activities available.',
+    description: 'Annual outdoor music festival featuring diverse local and regional bands. Food trucks and family activities available. A prime example of content for a local event discovery app.',
     resourceType: 'Local Event',
     sourceUrl: 'https://example.com/events/summer-sounds',
     originalSourceName: 'Springfield City Events Portal',
-    categories: ['Events', 'Music', 'Community', 'Family', 'Outdoor Activities'],
-    keywords: ['live music', 'outdoor', 'family-friendly', 'summer', 'festival', 'Springfield IL', 'concert'],
+    categories: ['Events', 'Music', 'Community', 'Family', 'Outdoor Activities', 'Local Event Platform Data'],
+    keywords: ['live music', 'outdoor', 'family-friendly', 'summer', 'festival', 'Springfield IL', 'concert', 'local event app', 'event discovery', 'event guide', 'Springfield events'],
     dataFormat: ['Website Listing'],
     updateFrequency: 'Annually (for this specific event), Varies (for portal)',
     license: 'Information Purpose Only',
-    potentialUseCases: ["Finding local music events", "Planning family outings in Springfield"],
-    sampleDataSnippet: { eventName: 'Summer Sounds Music Fest', date: '2024-07-20', city: 'Springfield' },
+    potentialUseCases: ["Featured event in a local event discovery app", "Data point for an app showcasing Springfield's music scene", "Planning family outings in Springfield using an event guide app"],
+    sampleDataSnippet: { eventName: 'Summer Sounds Music Fest', date: '2024-07-20', city: 'Springfield', type: 'Music Festival' },
     eventDetails: {
       type: 'Music Festival',
       date: '2024-07-20T00:00:00.000Z',
@@ -169,6 +169,7 @@ function constructEmbeddingTextFromResource(item: DatasetResource): string {
 
   // Optionally, add specific details from nested objects if not covered or need special formatting
   if (item.resourceType === 'Local Event' && item.eventDetails) {
+    textParts.push("This describes a specific local event, suitable for a local event discovery app or platform.");
     textParts.push(`Event Type: ${item.eventDetails.type}`);
     textParts.push(`Location: ${item.eventDetails.location.venueName || item.eventDetails.location.address}, ${item.eventDetails.location.city}`);
     if (item.eventDetails.organizer) textParts.push(`Organizer: ${item.eventDetails.organizer}`);
@@ -211,25 +212,33 @@ async function seedDatabase() {
       
       const embedding = await getTextEmbedding(textToEmbed);
       
-      const documentToUpsert: DatasetResource = {
-        ...resource, // Spread the initial resource data
-        _id: new ObjectId(), // Generate new ObjectId for each insert if not managing them via 'id' for upsert
+      // Prepare the document for $set, EXCLUDING _id from the initial resource spread for $set
+      // as _id is immutable and should only be set on insert.
+      const { _id, ...resourceDataForSet } = resource;
+
+      const updatePayload: Partial<DatasetResource> = {
+        ...resourceDataForSet, // Contains all fields from resource except _id
         dateAddedToVibeflow: new Date(),
         lastVerifiedByVibeflow: new Date(),
       };
 
       if (embedding) {
-        documentToUpsert.description_embedding = embedding;
+        updatePayload.description_embedding = embedding;
         console.log(`  Generated embedding for: ${resource.name}`);
       } else {
         console.warn(`  Could not generate embedding for: ${resource.name}. Skipping embedding for this item.`);
+        updatePayload.description_embedding = undefined; // Explicitly unset if embedding failed
       }
       
-      // Upsert based on the custom 'id' field to avoid duplicates if script is run multiple times
-      // This assumes 'id' is a unique business key for your resources.
+      // Upsert based on the custom 'id' field.
+      // $set will apply to fields for both inserts and updates (but won't try to change _id on update).
+      // $setOnInsert will apply _id only when a new document is created.
       await datasetsCollection.updateOne(
         { id: resource.id }, // Filter by your custom 'id'
-        { $set: documentToUpsert }, // Set all fields, including the new/updated ones
+        { 
+          $set: updatePayload,
+          $setOnInsert: { _id: new ObjectId() } // Generate _id ONLY on insert
+        },
         { upsert: true } // Create if not exists, update if exists
       );
       console.log(`  Upserted resource: ${resource.name} (ID: ${resource.id})`);
