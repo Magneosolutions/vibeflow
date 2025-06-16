@@ -10,9 +10,9 @@ The VibeFlow platform, as an **Interactive Vibe Refinement & Learning Tool**, wi
     *   **Styling:** Tailwind CSS (already implemented).
 
 2.  **Backend (VibeFlow Platform):**
-    *   **Framework:** To be decided (e.g., Node.js with Express.js/Fastify, Python with FastAPI/Django).
-        *   *Considerations:* Performance, ease of integration with AI SDKs (like Google's), MongoDB drivers, and cloud provider APIs. Node.js/Express or Python/FastAPI are strong candidates.
-    *   **Language:** JavaScript/TypeScript (if Node.js) or Python.
+    *   **Framework: Node.js with Express.js**
+        *   *Reasoning:* Chosen for its performance, strong ecosystem, ease of integration with Google Gemini SDK and MongoDB drivers, and suitability for building scalable APIs. TypeScript is used for type safety and maintainability.
+    *   **Language: TypeScript** (transpiled to JavaScript).
     *   **API Specification:** OpenAPI (Swagger) for clear API documentation and contract.
     *   **Authentication:** JWT (JSON Web Tokens) for securing APIs and managing user sessions. Consideration for OAuth 2.0 if third-party logins are desired in the future.
 

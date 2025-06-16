@@ -1,8 +1,13 @@
 # Progress: VibeFlow
 
-## Current Status: Strategic Shift to "Interactive Vibe Refinement & Learning Tool" - Memory Bank Updated, UI Text Updated. Ready for Real Authentication.
+## Current Status: Troubleshooting API Resource Discovery. Suspected outdated backend deployment.
 
 ### What Works (Implemented & Documented)
+*   **API Data Population Script (`populateApiData.ts`):** Successfully created and executed, populating the `apis` collection in MongoDB with 2 initial APIs and their embeddings. TypeScript error previously blocking this script has been resolved.
+*   **Atlas Vector Search Index for APIs (`vector_index_apis_description`):** Confirmed by user to be correctly configured (name: `vector_index_apis_description`, field: `description_embedding`, dimensions: 768) and 'READY' (active) in MongoDB Atlas.
+*   **Backend API Endpoint Code (`/api/process-vibe` in `vibeRoutes.ts`):** Local version of the code includes logic for searching both datasets and APIs, and for including `apiResults` in the JSON response. (Note: Deployed version currently does not return `apiResults`).
+*   **Frontend Display Logic for APIs (`MainAppPage.tsx`):** Local version of the code includes logic to render 'Suggested APIs' if `apiResults` are present in the data from the backend. (Note: End-to-end display unverified due to backend issue).
+*   **Strategic Product Direction Defined:** VibeFlow is now an "Interactive Vibe Refinement & Learning Tool." Core Memory Bank documents (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, this file) reflect this new direction.
 *   **Strategic Product Direction Defined:** VibeFlow is now an "Interactive Vibe Refinement & Learning Tool." Core Memory Bank documents (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, this file) reflect this new direction.
 *   **UI Updated for New Direction:** `vibeflow-frontend/src/pages/MainAppPage.tsx` updated with introductory text explaining the new focus.
 *   **Frontend Project Setup (Vite + React + TypeScript):** `vibeflow-frontend` directory created and configured.
@@ -101,38 +106,30 @@
 *   **`vibeflow-backend` Deployed to Cloud Run:** Successfully deployed to `https://vibeflow-backend-679820915121.us-west2.run.app/api` and confirmed operational.
 *   **Frontend Deployment Configuration Fixed:** Cloud Build trigger for `vibeflow-frontend` updated with correct `_VITE_API_BASE_URL` (including `/api` path). Frontend redeployed.
 *   **Application Working on Desktop:** VibeFlow is now functional end-to-end on desktop browsers.
-*   **Mobile Connection Issue Narrowed Down:**
+*   **Mobile Connection Issue Narrowed Down:** (Status unchanged, pending further investigation after core API feature works)
     *   Application shows "failed to load" on iPhone Chrome when "Flow" button is clicked (API call to `/api/process-vibe`).
     *   Direct access to the backend root URL (`https://vibeflow-backend-679820915121.us-west2.run.app/`) *works* on iPhone Chrome.
     *   This suggests the issue is specific to the frontend's API request from mobile, not general backend unreachability from the phone.
 
 ### What's Left to Build (Phase 1 - MVP - Revised for Interactive Refinement & Learning)
-*   **Troubleshoot Mobile API Call Issue:**
-    *   Attempt to get detailed console/network logs from iPhone Chrome during the failed API call.
-    *   Investigate potential CORS nuances, Content Security Policy (CSP), or mobile browser-specific `fetch` behavior.
-*   **Enable API Search in Backend:**
-    *   Modify `vibeRoutes.ts` to search the `apis` collection (once populated) in addition to `datasets`.
-    *   Update frontend to display suggested APIs.
-*   **Resolve `populateApiData.ts` TypeScript Error:**
-    *   User to investigate and fix the persistent TS2345 error in `vibeflow-backend/src/scripts/populateApiData.ts`.
-    *   Run the script to populate the `apis` collection in MongoDB.
-*   **Create Atlas Vector Search Index for APIs:**
-    *   Once APIs are populated, create a vector search index in MongoDB Atlas for the `apis.description_embedding` field.
-*   **Continue Curating Other Resources (APIs, more Datasets):**
-    *   Define schema for `apis` collection in MongoDB. (Completed 2025-06-14, documented in `systemPatterns.md`).
-    *   Manually curate a small list (e.g., 5-10) of common APIs with metadata, sample data snippets, and vector embeddings.
-        *   Created `vibeflow-backend/src/scripts/populateApiData.ts` with 2 initial APIs.
-        *   Added `populate:apis` script to `vibeflow-backend/package.json`.
-    *   Generate embeddings for these APIs and update/create necessary Atlas Vector Search indexes.
-        *   **Issue:** Execution of `populateApiData.ts` script is blocked by a persistent TypeScript error (TS2345) related to type inference for `api.description`. User to investigate TS/ts-node environment or run script with type error ignored.
-    *   Consider adding 1-2 more diverse public datasets if beneficial for the POC.
-*   **Display Curated Learning Links (Static Initial Set - Frontend):**
-    *   Added a dedicated section to `MainAppPage.tsx` to display a static set of general learning resource links (React, MongoDB Atlas, Tailwind CSS, Node.js). (Completed 2025-06-14).
+*   **Verify End-to-End API Search & Display Functionality:**
+    *   **User to Redeploy `vibeflow-backend` to Cloud Run:** Ensure the latest code (including API search logic and `apiResults` in the response) is live. User is currently working on this with corrected `gcloud` command.
+    *   **Confirm `apiResults` in Backend Response:** After redeployment, re-test with `curl` to ensure the `apiResults` field is present and populated in the backend's JSON output.
+    *   **Verify Frontend Display of APIs:** If `curl` test is successful, test via the VibeFlow UI with a targeted vibe to confirm "Suggested APIs" are displayed correctly.
+*   **Troubleshoot Mobile API Call Issue (If Persists):**
+    *   Once desktop API search functionality is confirmed, investigate and resolve the mobile API call issue.
+*   **Troubleshoot Frontend Login/Navigation (Deferred):**
+    *   Address the issue observed where navigating from the sign-up page to the login page via the link was not working.
+*   **Continue Curating API Resources:**
+    *   Once API search and display are confirmed working, curate and add more APIs to the `apis` collection in MongoDB.
 *   **Review and Refine Overall UX/UI:**
     *   Consider any minor UI tweaks for clarity or improved user flow based on current features.
 
 ### Known Issues & Blockers
-*   **TypeScript Error in `populateApiData.ts`:** Persistent TS2345 error blocks populating the `apis` collection. (Note: This was resolved locally before the successful build and deployment, but keeping the note until script is run successfully).
+*   **API Suggestions Not Appearing in Frontend:**
+    *   **Symptom:** Despite backend and frontend code appearing to support API search/display, and API data/index being set up, API suggestions are not shown in the UI. Direct `curl` test to the live backend confirms the `apiResults` field is missing from the JSON response.
+    *   **Suspected Cause:** The deployed version of `vibeflow-backend` on Cloud Run is outdated and does not include the latest changes for API searching and response structure.
+    *   **Current Next Step:** User is attempting to redeploy `vibeflow-backend` with the latest code.
 
 ### Overall Project Health
-*   **Excellent (Green):** VibeFlow is now fully deployed and operational on Google Cloud Run. The frontend and backend are communicating successfully. Core functionality is in place. The primary next steps involve expanding the curated content (APIs, datasets) and resolving any remaining issues with data population scripts.
+*   **Good (Amber):** Core functionality for dataset discovery and the dataset playground is operational on deployed environments. However, a key feature – API resource discovery – is currently not working end-to-end due to a suspected outdated backend deployment. Troubleshooting is actively underway to resolve this by guiding the user through backend redeployment. Other items like mobile compatibility and minor UI navigation issues are pending.

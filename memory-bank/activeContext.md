@@ -1,23 +1,23 @@
 # Active Context: VibeFlow
 
 ## Current Work Focus
-*   **Backend Services & API Implementation (Initial):**
-    *   `mongoService.ts`: Implemented MongoDB connection logic.
-    *   `aiService.ts`: Implemented Gemini connection and `getTextEmbedding` function.
-    *   `vibeRoutes.ts`: Created `/api/process-vibe` endpoint (with simulated DB search).
-    *   `index.ts`: Integrated routes, error handling, and DB connection on startup.
-*   **Frontend-Backend Connection:**
-    *   `MainAppPage.tsx`: "Flow" button now calls `/api/process-vibe` and displays results/loading/errors.
-*   **UI Branding Update:**
+*   **Troubleshooting and Verifying API Resource Discovery Feature:**
+    *   Successfully populated `apis` collection in MongoDB with initial data and embeddings using `populateApiData.ts`.
+    *   Verified with user that the Atlas Vector Search index `vector_index_apis_description` for the `apis` collection is correctly configured and active.
+    *   Tested the `/api/process-vibe` backend endpoint directly using `curl`.
+    *   Diagnosed that the `apiResults` field is missing from the live backend's JSON response.
+    *   Current hypothesis: The deployed version of `vibeflow-backend` on Cloud Run is outdated.
+    *   Currently guiding user through the process of re-deploying `vibeflow-backend` with the latest code.
+*   **UI Branding Update:** (No recent changes, keeping for context)
     *   Updated `index.html` favicon and title.
     *   Added `VibeFlow.png` logo to `LoginPage.tsx`, `SignUpPage.tsx`, and `MainAppPage.tsx`.
 *   **Backend Project Setup (Node.js/Express with TypeScript):** Complete.
 *   **Real Authentication Implementation (Firebase/GCIP):** Complete and working.
-*   **Dataset Curation (MongoDB):** First dataset inserted.
-*   **Strategic Shift & Documentation:** All Memory Bank documents are up-to-date.
+*   **Dataset Curation (MongoDB):** Initial datasets and "App Ideas" for playground inserted.
 *   **UI & Frontend Foundation Stable.**
-*   **Version Control Up-to-Date (Locally):** All changes, including backend service/API implementation and vector search, are documented and will be committed shortly.
 *   **Cloud Run Deployment Stable (Frontend).**
+    *   Note: A previous mobile API call issue from frontend is still pending investigation, potentially related to backend or CORS.
+    *   Note: A previous frontend login navigation issue was observed and deferred.
 *   **Real Vector Search Implemented & Tested (Datasets):**
     *   Script created and run to populate `description_embedding` for the "Google Trends" dataset.
     *   Atlas Vector Search index `vector_index_datasets_description` created on `datasets.description_embedding`.
@@ -43,6 +43,10 @@
     *   (Frontend already displays this feedback, potentially with markdown rendering).
 
 ## Recent Changes
+*   **Corrected `gcloud run deploy` command:** Provided user with the correct syntax for the `--project` flag for deploying `vibeflow-backend`. (2025-06-15)
+*   **Diagnosed Missing `apiResults` from Backend:** Used `curl` to test `/api/process-vibe` endpoint. Confirmed `apiResults` field is absent in the live backend's response, pointing to an outdated deployment. (2025-06-15)
+*   **Verified API Vector Search Index:** User confirmed Atlas Vector Search index `vector_index_apis_description` for the `apis` collection is correctly named, configured (field `description_embedding`, 768 dimensions), and 'READY'. (2025-06-15)
+*   **Populated `apis` Collection:** Successfully ran `populateApiData.ts` script, inserting 2 initial API documents with embeddings into MongoDB. Resolved previous TypeScript error in the script. (2025-06-15)
 *   **Improved AI Feedback (Vibe Check) Logic:**
     *   Modified `aiService.ts` to refine the prompt for `getAIFeedback`, aiming for more structured and targeted advice including "Refine Your Vision" and "Learn As You Go" points, contextualized by the single best-matched dataset.
     *   Updated `vibeRoutes.ts` to fetch only the top 1 dataset and pass its details to the feedback generation service.
@@ -97,38 +101,36 @@
 *   **Backend Deployment Preparation:**
     *   Created `vibeflow-backend/Dockerfile` for containerizing the backend application.
     *   Verified backend `index.ts` and `config/index.ts` correctly use `process.env.PORT`.
-*   **Awaiting User Action for Backend Deployment:** User is currently building, pushing, and deploying the backend to Cloud Run.
+*   **Awaiting User Action for Backend Deployment:** User is attempting to redeploy `vibeflow-backend` with the latest code using the corrected `gcloud run deploy` command.
 
 ## Next Steps
-1.  **Application Deployed & Working on Desktop:**
-    *   `vibeflow-backend` is live: `https://vibeflow-backend-679820915121.us-west2.run.app/api`
-    *   Frontend Cloud Build trigger updated with correct `_VITE_API_BASE_URL`.
-    *   Frontend redeployed. Application (`https://vibeflow-679820915121.us-west2.run.app`) successfully connects to the backend and fetches data on desktop browsers.
-2.  **Mobile Issue Narrowed Down:**
-    *   When testing on iPhone Chrome, clicking "Flow" results in a "failed to load" error for the API call to `/api/process-vibe`.
-    *   However, directly accessing the backend root URL (`https://vibeflow-backend-679820915121.us-west2.run.app/`) *does* work on iPhone Chrome ("VibeFlow Backend is Alive!").
-    *   This indicates the issue is specific to the frontend's API request from mobile, not general backend reachability.
-3.  **Troubleshooting Mobile API Call Issue:**
-    *   Attempt to get detailed console/network logs from iPhone Chrome during the failed API call.
-    *   Investigate potential CORS nuances, CSP, or mobile browser-specific `fetch` behavior.
-4.  **Continue Curating Other Resources (APIs, more Datasets):**
-    *   Define schema for `apis` collection in MongoDB. (Completed 2025-06-14, documented in `systemPatterns.md`).
-    *   Manually curate a small list (5-10) of common APIs (metadata, sample data snippets, vector embeddings).
-        *   Created `vibeflow-backend/src/scripts/populateApiData.ts` with 2 initial APIs (Google Maps JS, Public APIs GitHub).
-        *   Added `populate:apis` script to `vibeflow-backend/package.json`.
-        *   **Issue:** Script execution fails due to a persistent TypeScript error (TS2345) related to `api.description` type inference, despite explicit typing. User to investigate TS/ts-node environment or run with type error ignored.
-    *   Generate and store embeddings for these APIs. (Blocked by script execution issue).
-    *   Update/Create Atlas Vector Search indexes for APIs. (Blocked by script execution issue).
-    *   Potentially add more diverse public datasets if desired.
-6.  **Display Curated Learning Links (Static Initial Set - Frontend):**
-    *   Add a section to the frontend to display a small, static set of general learning links (this is now distinct from the AI's learning *topic* suggestions). (Completed 2025-06-14 - Added section to `MainAppPage.tsx`).
+1.  **User to Redeploy `vibeflow-backend`:**
+    *   User to execute the corrected `gcloud run deploy vibeflow-backend --source . --region us-west2 --project YOUR_PROJECT_ID --allow-unauthenticated` command from the `vibeflow-backend` directory.
+    *   Confirm successful deployment to Cloud Run.
+2.  **Re-test Backend with `curl` for API Results:**
+    *   After successful backend redeployment, run the `curl` command again:
+        `curl -X POST -H "Content-Type: application/json" -d '{"vibeText": "I want to build an app that shows customizable maps and business locations."}' https://vibeflow-backend-679820915121.us-west2.run.app/api/process-vibe`
+    *   Verify that the `apiResults` field is now present in the JSON response and contains the expected API data.
+3.  **Test API Feature via Frontend UI:**
+    *   If the `curl` test is successful (shows `apiResults`), user to test the API feature through the VibeFlow application UI.
+    *   Use a targeted vibe text (e.g., "I want to build an app that shows customizable maps") and check if "Suggested APIs" appear correctly.
+4.  **Troubleshoot Frontend Login/Navigation (Deferred):**
+    *   Address the issue observed where navigating from the sign-up page to the login page via the link was not working. This was deferred as the user opted to test API functionality themselves first.
+5.  **Troubleshoot Mobile API Call Issue (If Persists):**
+    *   Once desktop functionality for API search is confirmed, revisit the mobile API call issue if it still occurs.
+6.  **Continue Curating API Resources:**
+    *   If API search and display are working, proceed with curating more APIs for the `apis` collection.
+7.  **Version Control:** Commit Memory Bank updates and any related code changes.
 
 ## Active Decisions & Considerations
-*   **Backend Deployment:** Completed. Backend is live at `https://vibeflow-backend-679820915121.us-west2.run.app` and confirmed working.
+*   **Backend Deployment for API Feature:** Backend is live, but the currently deployed version is suspected to be outdated and not returning `apiResults`. Awaiting user redeployment of the latest `vibeflow-backend` code.
 *   **Frontend Configuration:** The `VITE_API_BASE_URL` runtime environment variable set on the frontend Cloud Run service is not sufficient. The variable needs to be available at *build time* for Vite to bake it into the static assets.
 *   **Resolution Path:** Update the frontend's Cloud Build trigger with the correct `_VITE_API_BASE_URL` substitution variable and redeploy the frontend.
 *   **AI Feedback (Vibe Check):** Now provides more structured and focused feedback based on the user's vibe and the single top-matched dataset. (`@tailwindcss/typography` installed, and rendering verified by user).
-*   **Backend Services (Initial & Vector Search):** `mongoService`, `aiService` (embedding), and `/api/process-vibe` route (with real vector search for datasets) are implemented and working.
+*   **Backend Services (Initial & Vector Search):**
+    *   Dataset vector search is implemented and working.
+    *   API vector search code is present in `vibeRoutes.ts` but suspected not to be live due to outdated deployment; `apiResults` field currently missing from live backend response.
+*   **Frontend Connected to Backend:** `MainAppPage.tsx` calls the API.
 *   **Frontend Connected to Backend:** `MainAppPage.tsx` calls the API.
 *   **Backend Technology Stack:** Node.js with Express.js and TypeScript (Setup complete, initial services built).
 *   **Real Authentication Implemented & Working:** Firebase/GCIP is the live authentication system.
