@@ -3,6 +3,7 @@
 ## Current Status: API Resource Discovery Feature successfully implemented and verified end-to-end.
 
 ### What Works (Implemented & Documented)
+*   **Expanded API/Resource Curation:** Successfully added "Awesome Public Datasets (GitHub)" to the `apis` collection via the `populateApiData.ts` script, and user confirmed it's discoverable in the UI. (2025-06-15)
 *   **End-to-End API Resource Discovery:**
     *   `apis` collection populated in MongoDB with embeddings via `populateApiData.ts` script.
     *   Atlas Vector Search index `vector_index_apis_description` confirmed active and correctly configured.

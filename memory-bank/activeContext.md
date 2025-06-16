@@ -44,6 +44,7 @@
     *   (Frontend already displays this feedback, potentially with markdown rendering).
 
 ## Recent Changes
+*   **Added "Awesome Public Datasets" Resource:** Updated `populateApiData.ts` script to include "Awesome Public Datasets (GitHub)". User ran the script successfully, and confirmed the new resource is discoverable in the VibeFlow UI. (2025-06-15)
 *   **API Feature Verified via UI:** User confirmed "Suggested APIs" (including Google Maps API) are displayed correctly in the UI after successful backend redeployment and positive `curl` test. (2025-06-15)
 *   **Backend API Call Confirmed Working (`curl` test):** After user redeployed backend, `curl` test to `/api/process-vibe` successfully returned `apiResults` field with expected API data. (2025-06-15)
 *   **User Redeployed Backend:** User confirmed `vibeflow-backend` was redeployed (implicitly, by stating it was done and proceeding with `curl` test). (2025-06-15)

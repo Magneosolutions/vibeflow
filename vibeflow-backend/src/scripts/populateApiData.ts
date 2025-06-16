@@ -69,6 +69,19 @@ const apisToInsert: ApiSeedData[] = [
     sample_response_snippet: 'N/A (Directory)',
     // description_embedding will be generated
   },
+  {
+    name: 'Awesome Public Datasets (GitHub)',
+    description: 'A curated list of topic-centric public datasets. Discover high-quality open datasets from various domains like agriculture, biology, economics, education, finance, and more.',
+    category: 'Dataset Directory',
+    documentation_url: 'https://github.com/awesomedata/awesome-public-datasets',
+    base_url: 'N/A (Directory)',
+    authentication_type: 'N/A (Links to external datasets)',
+    common_use_cases: ['Finding open datasets for data analysis', 'Discovering data for machine learning projects', 'Exploring publicly available information across diverse fields'],
+    keywords: ['public datasets', 'open data', 'dataset catalog', 'data science resources', 'awesome list', 'curated datasets'],
+    sample_endpoint: 'N/A (Directory of datasets)',
+    sample_response_snippet: 'N/A (Directory of datasets)',
+    // description_embedding will be generated
+  },
 ];
 
 async function populateApis() {
