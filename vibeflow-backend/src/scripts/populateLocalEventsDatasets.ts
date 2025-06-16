@@ -215,7 +215,7 @@ async function seedDatabase() {
   try {
     await client.connect();
     console.log("Successfully connected to MongoDB.");
-    const database = client.db('vibeflow_data'); // Or your specific DB name, e.g., from config
+    const database = client.db('vibeflow_db'); // Changed to vibeflow_db
 
     const eventsCollection = database.collection<LocalEvent>('localEvents');
     const apisCollection = database.collection<LocationApi>('locationApis');
