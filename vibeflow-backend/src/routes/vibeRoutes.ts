@@ -126,7 +126,7 @@ router.post('/process-vibe', asyncHandler(async (req: Request<{}, any, ProcessVi
   console.log(`Found ${searchResults.length} initial resources from 'datasets' collection via vector search.`);
 
   let finalResults: DatasetDocument[] = [];
-  const desiredResultCount = 5;
+  const desiredResultCount = 4;
 
   if (vibeText.toLowerCase().includes('event')) {
     console.log("Query indicates interest in events. Prioritizing 'Local Event' type.");
