@@ -8,11 +8,16 @@ import ReactMarkdown from 'react-markdown';
 interface SearchResultItem { // This will now be specifically for Datasets
   name: string;
   description?: string;
-  sourceUrl?: string; // Specific to datasets - corrected casing
-  sampleDataSnippet?: any;  // corrected casing
+  source_url?: string; // Specific to datasets - reverted to snake_case
+  sample_data_snippet?: any;  // reverted to snake_case
   score?: number; 
   category?: string[];
+  keywords?: string[]; // Added from backend projection
+  potential_use_cases?: string[]; // Added from backend projection
   core_features?: string[]; 
+  target_audience?: string; // Added from backend projection
+  complexity_rating?: string; // Added from backend projection
+  monetization_ideas?: string[]; // Added from backend projection
 }
 
 // New interface for API results
@@ -36,7 +41,7 @@ interface ApiResult { // This is the overall response from /process-vibe
   message: string;
   vibeText: string;
   vibeEmbeddingDimensions?: number;
-  results?: SearchResultItem[]; // For datasets - Key changed to match backend
+  searchResults?: SearchResultItem[]; // For datasets - Reverted to searchResults
   apiResults?: ApiItem[]; // For APIs
   aiFeedback?: string | null;
 }
@@ -265,16 +270,16 @@ const MainAppPage: React.FC = () => {
               <p><strong>Message:</strong> {apiResults.message}</p>
               {apiResults.vibeEmbeddingDimensions && <p><strong>Embedding Dimensions:</strong> {apiResults.vibeEmbeddingDimensions}</p>}
               
-              {apiResults.results && apiResults.results.length > 0 && (
+              {apiResults.searchResults && apiResults.searchResults.length > 0 && (
                 <div>
                   <h5 className="font-semibold">Suggested Datasets:</h5>
                   <ul className="space-y-3">
-                    {apiResults.results.map((item: SearchResultItem, index: number) => (
+                    {apiResults.searchResults.map((item: SearchResultItem, index: number) => (
                       <li key={index} className="mt-1 p-3 border border-gray-200 rounded-lg bg-white shadow-sm">
                         <div className="flex justify-between items-center">
                           <h6 className="font-bold text-gray-800">{item.name}</h6>
                           <div className="relative z-10"> {/* Added relative and z-10 */}
-                            {item.sourceUrl && <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-primary hover:text-brand-secondary hover:underline mr-3">View Source</a>}
+                            {item.source_url && <a href={item.source_url} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-primary hover:text-brand-secondary hover:underline mr-3">View Source</a>}
                             {item.category && item.category.includes("Playground App Idea") && (
                               <>
                                 {/* Log state values right before rendering the button */}
@@ -293,13 +298,13 @@ const MainAppPage: React.FC = () => {
                         </div>
                         <p className="text-sm text-gray-600 mt-1">{item.description?.substring(0, 250)}...</p>
                         {item.score && <p className="text-xs text-gray-500 mt-1">Relevance Score: {item.score.toFixed(4)}</p>}
-                        {item.sampleDataSnippet && (
+                        {item.sample_data_snippet && (
                           <div className="mt-2">
                             <h6 className="text-xs font-semibold text-gray-700">Sample Data:</h6>
                             <pre className="mt-1 p-2 bg-gray-50 text-xs text-gray-700 rounded-md overflow-x-auto">
-                              {typeof item.sampleDataSnippet === 'object' 
-                                ? JSON.stringify(item.sampleDataSnippet, null, 2) 
-                                : String(item.sampleDataSnippet)}
+                              {typeof item.sample_data_snippet === 'object' 
+                                ? JSON.stringify(item.sample_data_snippet, null, 2) 
+                                : String(item.sample_data_snippet)}
                             </pre>
                           </div>
                         )}
