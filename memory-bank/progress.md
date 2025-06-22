@@ -34,6 +34,13 @@
 *   **Music & Entertainment App Dataset Script:**
     *   Created `vibeflow-backend/src/scripts/addMusicEntertainmentApps.ts` with a curated list of music/entertainment app ideas.
     *   Added `populate-dataset:music-entertainment` script to `vibeflow-backend/package.json`.
+*   **Added Selfcare & Mental Health Domain to AI Dataset Generator:** (Timestamp: 2025-06-22 ~11:10 AM PST)
+    *   Added a new category to the `APP_CATEGORIES` array in `vibeflow-backend/src/scripts/aiDatasetGenerator.ts` with the domain "Selfcare & Mental Health" and relevant themes.
+*   **Renamed AI Dataset Generator Script:** (Timestamp: 2025-06-22 ~11:32 AM PST)
+    *   Renamed `vibeflow-backend/src/scripts/aiDatasetGenerator.ts` to `vibeflow-backend/src/scripts/selfcareapp.ts`.
+    *   Updated the script in `package.json` to reflect this change.
+*   **Ensured 3 Dataset Suggestions are Returned:** (Timestamp: 2025-06-22 ~11:59 AM PST)
+    *   Updated the `$limit` in the `vibeRoutes.ts` file to 3 in both the enhanced embedding search and the description embedding search.
 
 ## 2. Currently In Development
 *   **Memory Bank Initialization (Finalizing):**

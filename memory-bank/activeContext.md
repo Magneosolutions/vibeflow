@@ -46,3 +46,10 @@ The primary focus is the **initialization and population of the VibeFlow Memory 
     *   Created `vibeflow-backend/src/scripts/addMusicEntertainmentApps.ts` with a curated list of music/entertainment app ideas.
     *   Resolved a TypeScript error in the new script.
     *   Added `populate-dataset:music-entertainment` script to `vibeflow-backend/package.json`.
+*   **Added Selfcare & Mental Health Domain to AI Dataset Generator (User Request):** (Timestamp: 2025-06-22 ~11:10 AM PST)
+    *   Added a new category to the `APP_CATEGORIES` array in `vibeflow-backend/src/scripts/aiDatasetGenerator.ts` with the domain "Selfcare & Mental Health" and relevant themes.
+*   **Renamed AI Dataset Generator Script (User Request):** (Timestamp: 2025-06-22 ~11:32 AM PST)
+    *   Renamed `vibeflow-backend/src/scripts/aiDatasetGenerator.ts` to `vibeflow-backend/src/scripts/selfcareapp.ts`.
+    *   Updated the script in `package.json` to reflect this change.
+*   **Ensured 3 Dataset Suggestions are Returned (User Request):** (Timestamp: 2025-06-22 ~11:59 AM PST)
+    *   Updated the `$limit` in the `vibeRoutes.ts` file to 3 in both the enhanced embedding search and the description embedding search.
