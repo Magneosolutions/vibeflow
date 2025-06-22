@@ -102,7 +102,7 @@ const searchDatasetsWithFallbacks = async (vibeEmbedding: number[], datasetsColl
           }
         },
         {
-          $limit: 5 // Final limit after filtering
+          $limit: 3 // Final limit after filtering
         }
       ]).toArray();
       
@@ -157,7 +157,7 @@ const searchDatasetsWithFallbacks = async (vibeEmbedding: number[], datasetsColl
           }
         },
         {
-          $limit: 5
+          $limit: 3
         }
       ]).toArray();
       
