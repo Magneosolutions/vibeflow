@@ -14,6 +14,7 @@
     "populate-dataset:music-entertainment": "ts-node src/scripts/addMusicEntertainmentApps.ts",
     "populate:apis": "ts-node src/scripts/populateApiData.ts",
     "check:entertainment-apps": "ts-node src/scripts/checkEntertainmentApps.ts",
+    "populate-dataset:social-media-addiction": "ts-node src/scripts/populateSocialMediaAddictionDataset.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -23,6 +24,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.5",
+    "csv-parser": "^3.2.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mongodb": "^6.17.0"
