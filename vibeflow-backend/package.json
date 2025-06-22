@@ -11,6 +11,7 @@
     "populate-dataset:outdoor-sports": "ts-node src/scripts/populateOutdoorSportsApps.ts",
     "populate-dataset:ai-generated": "ts-node src/scripts/aiDatasetGenerator.ts",
     "populate-dataset:food-cooking": "ts-node src/scripts/addCookingFoodApps.ts",
+    "populate-dataset:music-entertainment": "ts-node src/scripts/addMusicEntertainmentApps.ts",
     "populate:apis": "ts-node src/scripts/populateApiData.ts",
     "check:entertainment-apps": "ts-node src/scripts/checkEntertainmentApps.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
