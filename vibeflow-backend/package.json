@@ -9,7 +9,7 @@
     "populate-embedding:google-trends": "ts-node src/scripts/populateGoogleTrendsEmbedding.ts",
     "populate-dataset:app-ideas": "ts-node src/scripts/populateAppIdeasDataset.ts",
     "populate-dataset:outdoor-sports": "ts-node src/scripts/populateOutdoorSportsApps.ts",
-    "populate-dataset:ai-generated": "ts-node src/scripts/aiDatasetGenerator.ts",
+    "populate-dataset:selfcare": "ts-node src/scripts/selfcareapp.ts",
     "populate-dataset:food-cooking": "ts-node src/scripts/addCookingFoodApps.ts",
     "populate-dataset:music-entertainment": "ts-node src/scripts/addMusicEntertainmentApps.ts",
     "populate:apis": "ts-node src/scripts/populateApiData.ts",

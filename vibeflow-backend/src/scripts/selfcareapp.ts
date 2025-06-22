@@ -82,6 +82,10 @@ const APP_CATEGORIES = [
   { 
     domain: "Outdoor & Sports", 
     themes: ["fitness tracking", "adventure planning", "sports community", "equipment", "hiking", "team sports"] 
+  },
+  {
+    domain: "Selfcare & Mental Health",
+    themes: ["meditation", "mindfulness", "therapy", "journaling", "mood tracking", "stress management"]
   }
 ];
 
